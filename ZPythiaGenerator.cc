@@ -175,7 +175,7 @@ int main (int argc, char *argv[]) {
         b_part_n++;
       }
 
-      if (abs (pythia.event[i].id ()) == 23) { // check if Z
+      if (abs (pythia.event[i].id ()) == 23 && pythia.event[i].isFinal()) { // check if Z
         b_z_pt.push_back (pythia.event[i].pT ());
         b_z_eta.push_back (pythia.event[i].eta ());
         b_z_phi.push_back (pythia.event[i].phi ());
@@ -273,6 +273,6 @@ int main (int argc, char *argv[]) {
   
   f->Write();
   f->Close();
-
+	cout<<"Done"<<std:end;
   return 0;
 }
