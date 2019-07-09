@@ -34,10 +34,8 @@ TLorentzVector* pToTLV(Vec4 in){
 int main (int argc, char *argv[]) {
 
   if (argc != 4) {
+		cout<<"args error"<<endl;
 
-    std::cout << " usage: ./zgen MINPT NEVT FILENAMEOUT" << std::endl;
-
-    return 0;
   }
 
   // Generator. Process selection. LHC initialization. Histogram.
@@ -46,16 +44,16 @@ int main (int argc, char *argv[]) {
   pythia.readString ("Beams:eCM = 5020.");
 
   pythia.readString("23:onMode = off");
-  pythia.readString("23:onIfAny = 11 13");
+	pythia.readString("23:onIfAny = 11 13");
 
   pythia.readString ("WeakZ0:gmZmode = 2"); // set to Z's
-  pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
-  pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
-  pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
+//  pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
+//  pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
+//  pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
   pythia.readString ("WeakBosonAndParton:qqbar2gmZg = on");   // code 241
   pythia.readString ("WeakBosonAndParton:qg2gmZq = on");      // code 242
-  pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
-  pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
+//  pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
+ // pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
 
   ostringstream ss; ss << "PhaseSpace:pTHatMin = " << argv[1] << ".";
   //pythia.readString("PhaseSpace:pTHatMin = 10.");
@@ -175,7 +173,7 @@ int main (int argc, char *argv[]) {
         b_part_n++;
       }
 
-      if (abs (pythia.event[i].id ()) == 23 && pythia.event[i].isFinal()) { // check if Z
+      if (pythia.event[i].pT()>=25&& abs (pythia.event[i].id ()) == 23&& (abs(pythia.event[pythia.event[i].daughter1()].id())==11 || abs(pythia.event[pythia.event[i].daughter1()].id())==13)) { // check if Z
         b_z_pt.push_back (pythia.event[i].pT ());
         b_z_eta.push_back (pythia.event[i].eta ());
         b_z_phi.push_back (pythia.event[i].phi ());
@@ -273,6 +271,6 @@ int main (int argc, char *argv[]) {
   
   f->Write();
   f->Close();
-	cout<<"Done"<<std:end;
+	cout<<"Done"<<std::endl;
   return 0;
 }
