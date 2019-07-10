@@ -29,7 +29,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 
 void hemiTrackHister(){
 	gStyle->SetOptStat(0);
-	TFile* f = new TFile("FranZOut.root", "READ");
+	TFile* f = new TFile("FranZOut15.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("zplots.root","RECREATE");
 
@@ -70,7 +70,7 @@ void hemiTrackHister(){
 	ntrack_plots.push_back(new TH1F("outer","",7,0,45));
 
 	unsigned totalZ=0;
-
+	//make npart
 	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
 		t->GetEntry (iEvt);
 		if(z_n!=1)continue;
@@ -87,15 +87,18 @@ void hemiTrackHister(){
 			}
 		}
 	}
+	//plot npart 
 	TCanvas* tc = new TCanvas();
 	tc->SetLogy();
 	tc->SetLogx();
 	unsigned count=0;
 	short colors[3]={kBlack,kRed,kBlue};
+	double bins[3]={2/TMath::Pi(),16./(3*TMath::Pi()),16./TMath::Pi()};
 	TLegend* tl = new TLegend(.2,.1,.4,.4);
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
-		(*i)->Scale(1./totalZ);
+		(*i)->Scale(1./totalZ,"width");
+		(*i)->Scale(bins[count]);
 		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
 		(*i)->SetLineColor(colors[count]);
 		if (count++==0)(*i)->Draw();

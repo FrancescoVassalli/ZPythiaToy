@@ -31,9 +31,9 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 void childTaggedHister(){
 	gStyle->SetOptStat(0);
 	TChain* t = new TChain("tree");
-	t->Add("ChildTagged1.root");
-	t->Add("ChildTagged2.root");
-	//t->Add("testout.root");
+	//t->Add("ChildTagged1.root");
+	//t->Add("ChildTagged2.root");
+	t->Add("testout.root");
 	TFile *thisFile = new TFile("zplots.root","RECREATE");
 
 	int code;
@@ -74,9 +74,14 @@ void childTaggedHister(){
 	ntrack_plots.push_back(new TH1F("medium","",15,0,45));
 	ntrack_plots.push_back(new TH1F("outer","",15,0,45));
 
+	std::vector<TH1F*> ntrackChild_plots;
+	ntrackChild_plots.push_back(new TH1F("trackChild","",15,0,45));
+	ntrackChild_plots.push_back(new TH1F("trackStrange","",15,0,45));
+
+
 	std::vector<TH1F*> dphi_plots;
-	dphi_plots.push_back(new TH1F("children","",15,0,TMath::Pi()));
-	dphi_plots.push_back(new TH1F("strangers","",15,0,TMath::Pi()));
+	dphi_plots.push_back(new TH1F("children","",10,0,TMath::Pi()));
+	dphi_plots.push_back(new TH1F("strangers","",10,0,TMath::Pi()));
 
 	unsigned totalZ=0;
 
@@ -97,12 +102,16 @@ void childTaggedHister(){
 			if (part_child->at(i))
 			{
 				dphi_plots[0]->Fill(DeltaPhi(part_phi->at(i),z_phi->at(0)));
+				ntrackChild_plots[0]->Fill(part_pt->at(i));
 			}
 			else{
+				ntrackChild_plots[1]->Fill(part_pt->at(i));
 				dphi_plots[1]->Fill(DeltaPhi(part_phi->at(i),z_phi->at(0)));
 			}
 		}
 	}
+
+	//plot the npart with dphi groups
 	TCanvas* tc = new TCanvas();
 	tc->SetLogy();
 	tc->SetLogx();
@@ -122,20 +131,40 @@ void childTaggedHister(){
 	}
 	tl->Draw();
 
+	//plot the npart with child groups
+	count=0;
+	TCanvas* tcC = new TCanvas();
+	tcC->SetLogy();
+	tcC->SetLogx();
+	TLegend* tlC = new TLegend(.2,.1,.4,.4);
+	for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
+	{
+		(*i)->Scale(1./totalZ,"width");
+		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
+		(*i)->SetLineColor(colors[count]);
+		if (count++==0)(*i)->Draw();
+		else (*i)->Draw("same");
+		tlC->AddEntry((*i),(*i)->GetName(),"l");
+	}
+	tlC->Draw();
+
+	//plot the dphi
 	TCanvas* tc2 = new TCanvas();
 	tc2->SetLogy();
 	count=0;
 	TLegend* tl2 = new TLegend(.2,.1,.4,.4);
 	for (std::vector<TH1F*>::iterator i = dphi_plots.begin(); i != dphi_plots.end(); ++i)
 	{
-		(*i)->Scale(1./totalZ);
+		(*i)->Scale(1./totalZ,"width");
 		(*i)->SetLineColor(colors[count]);
+		(*i)->GetYaxis()->SetRangeUser(10e-3,10e1);
 		if (count++==0)(*i)->Draw();
 		else (*i)->Draw("same");
 		tl2->AddEntry((*i),(*i)->GetName(),"l");
 	}
 	tl2->Draw();
 
+	//compare dphi for initial parton children to mpi
 	TCanvas* tc3 = new TCanvas();
 	TH1F *diff = (TH1F*) dphi_plots[0]->Clone("dphi_diff");
 	diff->Add(dphi_plots[1],-1);
