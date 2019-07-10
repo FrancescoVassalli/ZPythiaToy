@@ -89,7 +89,7 @@ void hemiTrackHister(){
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
 		TCanvas* tc = new TCanvas();
-		(*i)->Scale(1/totalZ);
+		(*i)->Scale(1./totalZ);
 		(*i)->Draw();
 	}
 
