@@ -108,10 +108,12 @@ void childTaggedHister(){
 	tc->SetLogx();
 	unsigned count=0;
 	short colors[3]={kBlack,kRed,kBlue};
+	double bins[3]={2/TMath::Pi(),16./(3*TMath::Pi()),16./TMath::Pi()};
 	TLegend* tl = new TLegend(.2,.1,.4,.4);
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
-		(*i)->Scale(1./totalZ);
+		(*i)->Scale(1./totalZ,"width");
+		(*i)->Scale(bins[count]);
 		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
 		(*i)->SetLineColor(colors[count]);
 		if (count++==0)(*i)->Draw();

@@ -102,7 +102,7 @@ int main (int argc, char *argv[]) {
 	int b_z_n, b_part_n;
 	vector<float> b_z_pt, b_z_eta, b_z_phi, b_z_m;
 	vector<float> b_part_pt, b_part_eta, b_part_phi;
-	std::vector<bool> b_part_Zchild;
+	std::vector<bool> b_part_child;
 	vector<float> b_jet_r04_pt, b_jet_r04_eta, b_jet_r04_phi, b_jet_r04_e;
 	vector<float> b_jet_r10_pt, b_jet_r10_eta, b_jet_r10_phi, b_jet_r10_e;
 	vector<float> b_l_pt, b_l_eta, b_l_phi, b_l_m;
@@ -126,14 +126,13 @@ int main (int argc, char *argv[]) {
 	t->Branch ("part_pt", &b_part_pt);
 	t->Branch ("part_eta", &b_part_eta);
 	t->Branch ("part_phi", &b_part_phi);
-	t->Branch ("part_child", &b_part_Zchild);
+	t->Branch ("part_child", &b_part_child);
 
-	/*t->Branch ("l_n",   &b_l_n);
 		t->Branch ("l_pt",  &b_l_pt);
 		t->Branch ("l_eta", &b_l_eta);
 		t->Branch ("l_phi", &b_l_phi);
 		t->Branch ("l_m",   &b_l_m);
-
+/*
 		t->Branch ("jet_r04_n",   &b_jet_r04_n);
 		t->Branch ("jet_r04_pt",  &b_jet_r04_pt);
 		t->Branch ("jet_r04_eta", &b_jet_r04_eta);
@@ -145,11 +144,7 @@ int main (int argc, char *argv[]) {
 		t->Branch ("jet_r10_eta", &b_jet_r10_eta);
 		t->Branch ("jet_r10_phi", &b_jet_r10_phi);
 		t->Branch ("jet_r10_e",   &b_jet_r10_e);
-
-		TLorentzVector l1, l2;*/
-
-	double tagTimeInSeconds;
-	double searchTimeInSeconds=0;
+*/
 	double pythiaTimeInSeconds=0;
 
 	for (int iEvent = 0; iEvent < NEVT; iEvent++) {
@@ -171,12 +166,28 @@ int main (int argc, char *argv[]) {
 		b_part_eta.clear ();
 		b_part_phi.clear ();
 
+    //get the lepton info
 		set<int> ZChildIndicies;
-		clock_t startTag = clock();
 		tagChildren(pythia.event[5],&ZChildIndicies, &pythia);
-		clock_t endTag = clock();
-		clock_t tagTime = endTag - startTag;
-		tagTimeInSeconds = tagTime / (double) CLOCKS_PER_SEC;
+    set<int>::reverse_iterator rit=ZChildIndicies.rbegin();
+    b_l_phi.push_back(pythia.event[*rit].phi());
+    b_l_eta.push_back(pythia.event[*rit].eta());
+    b_l_pt.push_back(pythia.event[*rit].pT());
+    b_l_m.push_back(pythia.event[*rit].m());
+    ++rit;
+    b_l_phi.push_back(pythia.event[*rit].phi());
+    b_l_eta.push_back(pythia.event[*rit].eta());
+    b_l_pt.push_back(pythia.event[*rit].pT());
+    b_l_m.push_back(pythia.event[*rit].m());
+
+    set<int> partonChildIndicies;
+    tagChildren(pythia.event[6],&partonChildIndicies, &pythia);
+
+    //cout<<"children of "<<pythia.event[6].id()<<"\n";
+    /*for (std::set<int>::iterator it = ZChildIndicies.begin(); it != ZChildIndicies.end(); ++it)
+    {
+      cout<<(*it)<<'\n';
+    }*/
 
 		for (int i = 0; i < pythia.event.size (); i++) {
 
@@ -204,19 +215,18 @@ int main (int argc, char *argv[]) {
 			//  b_z_n++;
 			//}
 
-
-			if (pythia.event[i].pT() >= 2 && pythia.event[i].isCharged() && pythia.event[i].isFinal()) {//record track info
+      //record track info
+			if (pythia.event[i].pT() >= 2 && pythia.event[i].isCharged() && pythia.event[i].isHadron()) {
 				b_part_pt.push_back (pythia.event[i].pT ());
 				b_part_eta.push_back (pythia.event[i].eta ());
 				b_part_phi.push_back (pythia.event[i].phi ());
-				clock_t startSearch = clock();
-				b_part_Zchild.push_back(ZChildIndicies.count(i));
-				clock_t endSearch = clock();
-				searchTimeInSeconds+=(endSearch-startSearch) / (double) CLOCKS_PER_SEC;
+				b_part_child.push_back(partonChildIndicies.count(i));
 				b_part_n++;
 			}
-
-			if (pythia.event[i].pT()>=25&& abs(pythia.event[i].id ()) == 23 /*&& (abs(pythia.event[pythia.event[i].daughter1()].id())==11 || abs(pythia.event[pythia.event[i].daughter1()].id())==13)*/) { // check if final Z with pT>25
+      //record the info for the final Z
+			if (pythia.event[i].pT()>=25&& abs(pythia.event[i].id ()) == 23 
+        && (abs(pythia.event[pythia.event[i].daughter1()].id())==11 
+          || abs(pythia.event[pythia.event[i].daughter1()].id())==13)) {
 				b_z_pt.push_back (pythia.event[i].pT ());
 				b_z_eta.push_back (pythia.event[i].eta ());
 				b_z_phi.push_back (pythia.event[i].phi ());
