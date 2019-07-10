@@ -29,6 +29,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 
 
 void childTaggedHister(){
+	gStyle->SetOptStat(0);
 	TChain* t = new TChain("tree");
 	t->Add("ChildTagged1.root");
 	t->Add("ChildTagged2.root");
@@ -84,7 +85,7 @@ void childTaggedHister(){
 		if(z_n!=1)continue;
 		totalZ+=z_n;
 		for (unsigned i=0; i < part_pt->size(); i++) {
-			if(DeltaPhi(part_phi->at(i),z_phi->at(0)) <TMath::Pi()/2){
+			if(DeltaPhi(part_phi->at(i),z_phi->at(0)) <TMath::Pi()/2&&DeltaPhi(part_phi->at(i),z_phi->at(0))>0){
 				ntrack_plots[0]->Fill(part_pt->at(i));
 			}
 			else if(DeltaPhi(part_phi->at(i),z_phi->at(0))>3*TMath::Pi()/4&&DeltaPhi(part_phi->at(i),z_phi->at(0))<15*TMath::Pi()/16){
@@ -102,20 +103,42 @@ void childTaggedHister(){
 			}
 		}
 	}
+	TCanvas* tc = new TCanvas();
+	tc->SetLogy();
+	tc->SetLogx();
+	unsigned count=0;
+	short colors[3]={kBlack,kRed,kBlue};
+	TLegend* tl = new TLegend(.2,.1,.4,.4);
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
-		TCanvas* tc = new TCanvas();
-		(*i)->Scale(1./(*i)->totalZ);
-		tc->SetLogy();
-		(*i)->Draw();
+		(*i)->Scale(1./totalZ);
+		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
+		(*i)->SetLineColor(colors[count]);
+		if (count++==0)(*i)->Draw();
+		else (*i)->Draw("same");
+		tl->AddEntry((*i),(*i)->GetName(),"l");
 	}
+	tl->Draw();
+
+	TCanvas* tc2 = new TCanvas();
+	tc2->SetLogy();
+	count=0;
+	TLegend* tl2 = new TLegend(.2,.1,.4,.4);
 	for (std::vector<TH1F*>::iterator i = dphi_plots.begin(); i != dphi_plots.end(); ++i)
 	{
-		TCanvas* tc = new TCanvas();
-		tc->SetLogy();
 		(*i)->Scale(1./totalZ);
-		(*i)->Draw();
+		(*i)->SetLineColor(colors[count]);
+		if (count++==0)(*i)->Draw();
+		else (*i)->Draw("same");
+		tl2->AddEntry((*i),(*i)->GetName(),"l");
 	}
+	tl2->Draw();
+
+	TCanvas* tc3 = new TCanvas();
+	TH1F *diff = (TH1F*) dphi_plots[0]->Clone("dphi_diff");
+	diff->Add(dphi_plots[1],-1);
+	diff->GetYaxis()->SetRangeUser(-1,1);
+	diff->Draw();
 
 	thisFile->Write();
 	//thisFile->Close();

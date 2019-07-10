@@ -28,6 +28,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 }
 
 void hemiTrackHister(){
+	gStyle->SetOptStat(0);
 	TFile* f = new TFile("FranZOut.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("zplots.root","RECREATE");
