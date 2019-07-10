@@ -44,13 +44,16 @@ void childTaggedHister(){
 
 	std::vector<TChain*> chains;
 	chains.push_back(new TChain("tree"));
+	chains.push_back(new TChain("tree"));
+	chains.push_back(new TChain("tree"));
+	chains.push_back(new TChain("tree"));
 
-	for (unsigned i=0; i<options.size(),++i)
+	for (unsigned i=0; i<options.size();++i)
 	{
 		string name1 = name+options[i]+"1"+extention;
 		string name2 = name+options[i]+"2"+extention;
-		chains[i]->Add(name1);
-		chains[i]->Add(name2);
+		chains[i]->Add(name1.c_str());
+		chains[i]->Add(name2.c_str());
 	}
 	std::vector<string>::iterator nameit=options.begin();
 	for (std::vector<TChain*>::iterator chainpointer = chains.begin(); chainpointer != chains.end(); ++chainpointer)
@@ -91,25 +94,25 @@ void childTaggedHister(){
 		t->SetBranchAddress ("part_child", &part_child);
 
 		std::vector<TH1F*> ntrack_plots;
-		ntrack_plots.push_back(new TH1F(*nameit+" near","",15,0,45));
-		ntrack_plots.push_back(new TH1F(*nameit+" middle","",15,0,45));
-		ntrack_plots.push_back(new TH1F(*nameit+" away","",15,0,45));
+		ntrack_plots.push_back(new TH1F((*nameit+" near").c_str(),"",15,0,45));
+		ntrack_plots.push_back(new TH1F((*nameit+" middle").c_str(),"",15,0,45));
+		ntrack_plots.push_back(new TH1F((*nameit+" away").c_str(),"",15,0,45));
 		for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
 		}
 
 		std::vector<TH1F*> ntrackChild_plots;
-		ntrackChild_plots.push_back(new TH1F(*nameit+" child_ntrack","",15,0,45));
-		ntrackChild_plots.push_back(new TH1F(*nameit+" forgein_ntrack","",15,0,45));
+		ntrackChild_plots.push_back(new TH1F((*nameit+" child_ntrack").c_str(),"",15,0,45));
+		ntrackChild_plots.push_back(new TH1F((*nameit+" forgein_ntrack").c_str(),"",15,0,45));
 		for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
 		}
 
 		std::vector<TH1F*> dphi_plots;
-		dphi_plots.push_back(new TH1F(*nameit+" child_dphi","",10,0,TMath::Pi()));
-		dphi_plots.push_back(new TH1F(*nameit+" forgein_dphi","",10,0,TMath::Pi()));
+		dphi_plots.push_back(new TH1F((*nameit+" child_dphi").c_str(),"",10,0,TMath::Pi()));
+		dphi_plots.push_back(new TH1F((*nameit+" forgein_dphi").c_str(),"",10,0,TMath::Pi()));
 		for (std::vector<TH1F*>::iterator i = dphi_plots.begin(); i != dphi_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
@@ -142,6 +145,7 @@ void childTaggedHister(){
 				}
 			}
 		}
+		cout<<"not here"<<endl;
 
 		//plot the npart with dphi groups
 		TCanvas* tc = new TCanvas();
@@ -162,6 +166,7 @@ void childTaggedHister(){
 			tl->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tl->Draw();
+		tc->SaveAs((*nameit+"_npart_dphi.pdf").c_str());
 
 		//plot the npart with child groups
 		count=0;
@@ -179,6 +184,7 @@ void childTaggedHister(){
 			tlC->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tlC->Draw();
+		tc->SaveAs((*nameit+"_npart_child.pdf").c_str());
 
 		//plot the dphi
 		TCanvas* tc2 = new TCanvas();
@@ -195,6 +201,7 @@ void childTaggedHister(){
 			tl2->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tl2->Draw();
+		tc->SaveAs((*nameit+"_child_dphi.pdf").c_str());
 
 		//compare dphi for initial parton children to mpi
 		TCanvas* tc3 = new TCanvas();
@@ -202,8 +209,11 @@ void childTaggedHister(){
 		diff->Add(dphi_plots[1],-1);
 		diff->GetYaxis()->SetRangeUser(-1,1);
 		diff->Draw();
+		tc->SaveAs((*nameit+"_diff_dphi.pdf").c_str());
+
 
 		thisFile->Write();
+		nameit++;
 	}
 	thisFile->Close();
 }
