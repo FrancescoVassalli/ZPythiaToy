@@ -32,7 +32,7 @@ namespace {
 
 void childTaggedHister(){
 	gStyle->SetOptStat(0);
-	TFile *thisFile = new TFile("zplots.root","RECREATE");
+	TFile *thisFile = new TFile("../plots/zplots.root","RECREATE");
 
 	string name = "childTaggedHister";
 	string extention = ".root";
@@ -166,7 +166,7 @@ void childTaggedHister(){
 			tl->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tl->Draw();
-		tc->SaveAs((*nameit+"_npart_dphi.pdf").c_str());
+		tc->SaveAs(("../plots/"+*nameit+"_npart_dphi.pdf").c_str());
 
 		//plot the npart with child groups
 		count=0;
@@ -184,7 +184,7 @@ void childTaggedHister(){
 			tlC->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tlC->Draw();
-		tc->SaveAs((*nameit+"_npart_child.pdf").c_str());
+		tc->SaveAs(("../plots/"+*nameit+"_npart_child.pdf").c_str());
 
 		//plot the dphi
 		TCanvas* tc2 = new TCanvas();
@@ -201,7 +201,7 @@ void childTaggedHister(){
 			tl2->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tl2->Draw();
-		tc->SaveAs((*nameit+"_child_dphi.pdf").c_str());
+		tc->SaveAs(("../plots/"+*nameit+"_child_dphi.pdf").c_str());
 
 		//compare dphi for initial parton children to mpi
 		TCanvas* tc3 = new TCanvas();
@@ -209,7 +209,7 @@ void childTaggedHister(){
 		diff->Add(dphi_plots[1],-1);
 		diff->GetYaxis()->SetRangeUser(-1,1);
 		diff->Draw();
-		tc->SaveAs((*nameit+"_diff_dphi.pdf").c_str());
+		tc->SaveAs(("../plots/"+*nameit+"_diff_dphi.pdf").c_str());
 
 
 		thisFile->Write();
