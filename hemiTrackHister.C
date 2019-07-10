@@ -28,7 +28,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 }
 
 void hemiTrackHister(){
-	TFile* f = new TFile("hemiout.root", "READ");
+	TFile* f = new TFile("FranZOut.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("zplots.root","RECREATE");
 
@@ -64,9 +64,9 @@ void hemiTrackHister(){
 	t->SetBranchAddress ("part_phi",  &part_phi);
 
 	std::vector<TH1F*> ntrack_plots;
-	ntrack_plots.push_back(new TH1F("central","",15,0,45));
-	ntrack_plots.push_back(new TH1F("medium","",15,0,45));
-	ntrack_plots.push_back(new TH1F("outer","",15,0,45));
+	ntrack_plots.push_back(new TH1F("central","",7,0,45));
+	ntrack_plots.push_back(new TH1F("medium","",7,0,45));
+	ntrack_plots.push_back(new TH1F("outer","",7,0,45));
 
 	unsigned totalZ=0;
 
@@ -86,13 +86,23 @@ void hemiTrackHister(){
 			}
 		}
 	}
+	TCanvas* tc = new TCanvas();
+	tc->SetLogy();
+	tc->SetLogx();
+	unsigned count=0;
+	short colors[3]={kBlack,kRed,kBlue};
+	TLegend* tl = new TLegend(.2,.1,.4,.4);
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
-		TCanvas* tc = new TCanvas();
 		(*i)->Scale(1./totalZ);
-		(*i)->Draw();
+		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
+		(*i)->SetLineColor(colors[count]);
+		if (count++==0)(*i)->Draw();
+		else (*i)->Draw("same");
+		tl->AddEntry((*i),(*i)->GetName(),"l");
 	}
-
+	tl->Draw();
+	cout<<"hemi momentum diff: "<<ntrack_plots[2]->Integral()+ntrack_plots[1]->Integral()-ntrack_plots[0]->Integral()<<'\n';
 	thisFile->Write();
 	//thisFile->Close();
 }
