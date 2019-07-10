@@ -7,11 +7,24 @@
 
 using namespace std;
 
+double DeltaPhi (double phi1, double phi2, const bool sign=0) {
+  phi1 = InTwoPi(phi1);
+  phi2 = InTwoPi(phi2);
+  double dphi = abs(phi1 - phi2);
+  while (dphi > pi) dphi = abs (dphi - 2*pi);
+
+  if (sign && InTwoPi (phi2 + dphi) == phi1)
+     dphi *= -1;
+
+  return dphi;
+}
+
+
 void childTaggedHister(){
-	TChain* t("vines");
-	//t->add("ChildTagged1.root");
-	//t->add("ChildTagged2.root");
-	t->add("testout.root");
+	TChain* t = new TChain("tree");
+	t->Add("ChildTagged1.root");
+	t->Add("ChildTagged2.root");
+	//t->Add("testout.root");
 	TFile *thisFile = new TFile("zplots.root","RECREATE");
 
 	int code;
@@ -26,7 +39,7 @@ void childTaggedHister(){
 	int z_n, jet_n, part_n;
 	vector<float>* z_pt = nullptr, *z_eta = nullptr, *z_phi = nullptr, *z_m = nullptr;
 	vector<float>* part_pt = nullptr, *part_eta = nullptr, *part_phi = nullptr;
-	std::vector<bool> *part_child;
+	std::vector<bool> *part_child=nullptr;
 
 	t->SetBranchAddress ("code",  &code);
 	t->SetBranchAddress ("id1",   &id1);
@@ -60,21 +73,21 @@ void childTaggedHister(){
 		t->GetEntry (iEvt);
 		if(z_n!=1)continue;
 		for (unsigned i=0; i < part_pt->size(); i++) {
-			if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<3*TMath::Pi()/4){
+			if(DeltaPhi(part_phi->at(i),z_phi->at(0)) <TMath::Pi()/2){
 				ntrack_plots[0]->Fill(part_pt->at(i));
 			}
-			else if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<15*TMath::Pi()/16){
+			else if(DeltaPhi(part_phi->at(i),z_phi->at(0))>3*TMath::Pi/4&&DeltaPhi(part_phi->at(i),z_phi->at(0))<15*TMath::Pi()/16){
 				ntrack_plots[1]->Fill(part_pt->at(i));
 			}
-			else if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<TMath::Pi()){
+			else if(DeltaPhi(part_phi->at(i),z_phi->at(0))<TMath::Pi()&&DeltaPhi(part_phi->at(i),z_phi->at(0))>15*TMath::Pi()/16){
 				ntrack_plots[2]->Fill(part_pt->at(i));
 			}
 			if (part_child->at(i))
 			{
-				dphi_plots[0]->Fill(part_phi->at(i)-z_phi->at(0));
+				dphi_plots[0]->Fill(15*TMath::Pi()/16);
 			}
 			else{
-				dphi_plots[1]->Fill(part_phi->at(i)-z_phi->at(0));
+				dphi_plots[1]->Fill(15*TMath::Pi()/16);
 			}
 		}
 	}
@@ -82,11 +95,13 @@ void childTaggedHister(){
 	{
 		TCanvas* tc = new TCanvas();
 		(*i)->Scale(1/(*i)->Integral());
+		tc->SetLogy();
 		(*i)->Draw();
 	}
 	for (std::vector<TH1F*>::iterator i = dphi_plots.begin(); i != dphi_plots.end(); ++i)
 	{
 		TCanvas* tc = new TCanvas();
+		tc->SetLogy();
 		(*i)->Scale(1/(*i)->Integral());
 		(*i)->Draw();
 	}
