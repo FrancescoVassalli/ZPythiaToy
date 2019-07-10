@@ -31,6 +31,20 @@ TLorentzVector* pToTLV(Vec4 in){
 	return out;
 }
 
+
+void tagChildren(Pythia8::Particle parent,std::set<int>* childIndexSet,Pythia* pythia){
+  childIndexSet->insert(parent.daughter1());
+  childIndexSet->insert(parent.daughter2());
+  if (parent.daughter1()>0)
+  {
+    tagChildren(pythia->event[parent.daughter1()],childIndexSet,pythia);
+  }
+  if (parent.daughter2()>0)
+  {
+    tagChildren(pythia->event[parent.daughter2()],childIndexSet,pythia);
+  }
+}
+
 int main (int argc, char *argv[]) {
 
   if (argc != 4) {
@@ -78,9 +92,10 @@ int main (int argc, char *argv[]) {
   bool b_isValence1;
   bool b_isValence2;
 
-  int b_z_n, b_part_n, b_jet_r04_n, b_jet_r10_n, b_l_n;
+  int b_z_n, b_part_n;
   vector<float> b_z_pt, b_z_eta, b_z_phi, b_z_m;
   vector<float> b_part_pt, b_part_eta, b_part_phi;
+  std::vector<bool> b_part_Zchild;
   vector<float> b_jet_r04_pt, b_jet_r04_eta, b_jet_r04_phi, b_jet_r04_e;
   vector<float> b_jet_r10_pt, b_jet_r10_eta, b_jet_r10_phi, b_jet_r10_e;
   vector<float> b_l_pt, b_l_eta, b_l_phi, b_l_m;
@@ -105,7 +120,7 @@ int main (int argc, char *argv[]) {
   t->Branch ("part_eta", &b_part_eta);
   t->Branch ("part_phi", &b_part_phi);
 
-  t->Branch ("l_n",   &b_l_n);
+  /*t->Branch ("l_n",   &b_l_n);
   t->Branch ("l_pt",  &b_l_pt);
   t->Branch ("l_eta", &b_l_eta);
   t->Branch ("l_phi", &b_l_phi);
@@ -123,8 +138,8 @@ int main (int argc, char *argv[]) {
   t->Branch ("jet_r10_phi", &b_jet_r10_phi);
   t->Branch ("jet_r10_e",   &b_jet_r10_e);
 
-  TLorentzVector l1, l2;
-  
+  TLorentzVector l1, l2;*/
+
   for (int iEvent = 0; iEvent < NEVT; iEvent++) {
     if (!pythia.next ())
       continue;
@@ -165,11 +180,14 @@ int main (int argc, char *argv[]) {
       //  b_z_m.push_back ((l1+l2).M ());
       //  b_z_n++;
       //}
+      set<int> ZChildIndicies;
+      tagChildren(pythia.event[5],&ZChildIndicies, &pythia);
 			
       if (pythia.event[i].isHadron() && pythia.event[i].pT() >= 2 && pythia.event[i].isCharged()) {//record track info
         b_part_pt.push_back (pythia.event[i].pT ());
         b_part_eta.push_back (pythia.event[i].eta ());
         b_part_phi.push_back (pythia.event[i].phi ());
+        b_part_Zchild.push_back(ZChildIndicies.count(i));
         b_part_n++;
       }
 
@@ -181,7 +199,6 @@ int main (int argc, char *argv[]) {
         b_z_n++;
       }
     }
-		
     if (b_z_n == 0) {//check there is Z in event
       iEvent--;
       continue;
@@ -200,13 +217,13 @@ int main (int argc, char *argv[]) {
     b_isValence1 = pythia.info.isValence1 ();
     b_isValence2 = pythia.info.isValence2 ();
 
-    b_l_n = 0;
+    /*b_l_n = 0;
     b_l_pt.clear ();
     b_l_eta.clear ();
     b_l_phi.clear ();
     b_l_m.clear ();
 
-   /* for (int i = 0; i < pythia.event.size (); i++) {
+    for (int i = 0; i < pythia.event.size (); i++) {
 
       if (!pythia.event[i].isFinal()) continue; // check if in final state
 
@@ -263,7 +280,7 @@ int main (int argc, char *argv[]) {
     
     t->Fill();
 
-    if (iEvent % (NEVT/100) == 0)
+    if (NEVT>100&&iEvent % (NEVT/100) == 0)
       std::cout << iEvent / (NEVT/100) << "\% done...\r" << std::flush;
   }
 
@@ -271,6 +288,7 @@ int main (int argc, char *argv[]) {
   
   f->Write();
   f->Close();
+	
 	cout<<"Done"<<std::endl;
   return 0;
 }
