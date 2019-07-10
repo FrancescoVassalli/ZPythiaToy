@@ -58,6 +58,8 @@ int main (int argc, char *argv[]) {
 	Pythia pythia;
 
 	pythia.readString ("Beams:eCM = 5020.");
+  pythia.readString("Random::setSeed = on");
+  pythia.readString("Random::seed =0");
 
 	pythia.readString("23:onMode = off");
 	pythia.readString("23:onIfAny = 11 13");
@@ -175,12 +177,6 @@ int main (int argc, char *argv[]) {
 		clock_t endTag = clock();
 		clock_t tagTime = endTag - startTag;
 		tagTimeInSeconds = tagTime / (double) CLOCKS_PER_SEC;
-		cout<<"children:\n";
-
-		for (std::set<int>::iterator it = ZChildIndicies.begin(); it != ZChildIndicies.end(); ++it)
-		{
-			cout<<"\t"<<*it<<'\n';
-		}
 
 		for (int i = 0; i < pythia.event.size (); i++) {
 
