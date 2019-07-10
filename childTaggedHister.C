@@ -77,9 +77,12 @@ void childTaggedHister(){
 	dphi_plots.push_back(new TH1F("children","",15,0,TMath::Pi()));
 	dphi_plots.push_back(new TH1F("strangers","",15,0,TMath::Pi()));
 
+	unsigned totalZ=0;
+
 	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
 		t->GetEntry (iEvt);
 		if(z_n!=1)continue;
+		totalZ+=z_n;
 		for (unsigned i=0; i < part_pt->size(); i++) {
 			if(DeltaPhi(part_phi->at(i),z_phi->at(0)) <TMath::Pi()/2){
 				ntrack_plots[0]->Fill(part_pt->at(i));
@@ -102,7 +105,7 @@ void childTaggedHister(){
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
 		TCanvas* tc = new TCanvas();
-		(*i)->Scale(1/(*i)->Integral());
+		(*i)->Scale(1/(*i)->totalZ);
 		tc->SetLogy();
 		(*i)->Draw();
 	}
@@ -110,7 +113,7 @@ void childTaggedHister(){
 	{
 		TCanvas* tc = new TCanvas();
 		tc->SetLogy();
-		(*i)->Scale(1/(*i)->Integral());
+		(*i)->Scale(1/totalZ);
 		(*i)->Draw();
 	}
 

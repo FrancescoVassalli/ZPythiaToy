@@ -68,9 +68,12 @@ void hemiTrackHister(){
 	ntrack_plots.push_back(new TH1F("medium","",15,0,45));
 	ntrack_plots.push_back(new TH1F("outer","",15,0,45));
 
+	unsigned totalZ=0;
+
 	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
 		t->GetEntry (iEvt);
 		if(z_n!=1)continue;
+		totalZ+=z_n;
 		for (unsigned i=0; i < part_pt->size(); i++) {
 			if(DeltaPhi(part_phi->at(i),z_phi->at(0))<TMath::Pi()/2){
 				ntrack_plots[0]->Fill(part_pt->at(i));
@@ -86,7 +89,7 @@ void hemiTrackHister(){
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
 		TCanvas* tc = new TCanvas();
-		(*i)->Scale(1/(*i)->Integral());
+		(*i)->Scale(1/totalZ);
 		(*i)->Draw();
 	}
 
