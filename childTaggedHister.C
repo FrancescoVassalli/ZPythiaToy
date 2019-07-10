@@ -7,6 +7,14 @@
 
 using namespace std;
 
+double InTwoPi (double phi) {
+  while (phi < 0 || 2*pi <= phi) {
+   if (phi < 0) phi += 2*pi;
+   else phi -= 2*pi;
+  }
+  return phi;
+}
+
 double DeltaPhi (double phi1, double phi2, const bool sign=0) {
   phi1 = InTwoPi(phi1);
   phi2 = InTwoPi(phi2);
