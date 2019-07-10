@@ -28,7 +28,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 }
 
 void minBiasHister(){
-	gStyle->SetOptStat(0);
+	//gStyle->SetOptStat(0);
 	TFile* f = new TFile("../pythiadata/minbias.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("../plots/minbias_plots.root","RECREATE");
@@ -40,19 +40,20 @@ void minBiasHister(){
 	t->SetBranchAddress ("part_phi",  &part_phi);
 
 	TH1F* production = new TH1F("central","",7,0,45);
+	production->Sumw2();
 
 	//make npart
 	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
 		t->GetEntry (iEvt);
 		for (unsigned i=0; i < part_pt->size(); i++) {
-			production->Fill(part_pt[i]);
+			production->Fill(part_pt->at(i));
 		}
 	}
 	//plot npart 
 	TCanvas* tc = new TCanvas();
 	tc->SetLogy();
 	tc->SetLogx();
-	production->Scale(1/t->GetEntries(),"width");
+	production->Scale(1./t->GetEntries(),"width");
 	production->Scale(1/TMath::Pi());
 	production->Draw("e1");
 	
