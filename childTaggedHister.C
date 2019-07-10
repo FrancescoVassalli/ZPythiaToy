@@ -73,15 +73,26 @@ void childTaggedHister(){
 	ntrack_plots.push_back(new TH1F("central","",15,0,45));
 	ntrack_plots.push_back(new TH1F("medium","",15,0,45));
 	ntrack_plots.push_back(new TH1F("outer","",15,0,45));
+	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
+	{
+		(*i)->Sumw2();
+	}
 
 	std::vector<TH1F*> ntrackChild_plots;
 	ntrackChild_plots.push_back(new TH1F("trackChild","",15,0,45));
 	ntrackChild_plots.push_back(new TH1F("trackStrange","",15,0,45));
-
+	for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
+	{
+		(*i)->Sumw2();
+	}
 
 	std::vector<TH1F*> dphi_plots;
 	dphi_plots.push_back(new TH1F("children","",10,0,TMath::Pi()));
 	dphi_plots.push_back(new TH1F("strangers","",10,0,TMath::Pi()));
+	for (std::vector<TH1F*>::iterator i = dphi_plots.begin(); i != dphi_plots.end(); ++i)
+	{
+		(*i)->Sumw2();
+	}
 
 	unsigned totalZ=0;
 
@@ -125,8 +136,8 @@ void childTaggedHister(){
 		(*i)->Scale(bins[count]);
 		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
 		(*i)->SetLineColor(colors[count]);
-		if (count++==0)(*i)->Draw();
-		else (*i)->Draw("same");
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
 		tl->AddEntry((*i),(*i)->GetName(),"l");
 	}
 	tl->Draw();
@@ -142,8 +153,8 @@ void childTaggedHister(){
 		(*i)->Scale(1./totalZ,"width");
 		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
 		(*i)->SetLineColor(colors[count]);
-		if (count++==0)(*i)->Draw();
-		else (*i)->Draw("same");
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
 		tlC->AddEntry((*i),(*i)->GetName(),"l");
 	}
 	tlC->Draw();
@@ -158,8 +169,8 @@ void childTaggedHister(){
 		(*i)->Scale(1./totalZ,"width");
 		(*i)->SetLineColor(colors[count]);
 		(*i)->GetYaxis()->SetRangeUser(10e-3,10e1);
-		if (count++==0)(*i)->Draw();
-		else (*i)->Draw("same");
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
 		tl2->AddEntry((*i),(*i)->GetName(),"l");
 	}
 	tl2->Draw();

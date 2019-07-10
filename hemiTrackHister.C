@@ -68,6 +68,10 @@ void hemiTrackHister(){
 	ntrack_plots.push_back(new TH1F("central","",7,0,45));
 	ntrack_plots.push_back(new TH1F("medium","",7,0,45));
 	ntrack_plots.push_back(new TH1F("outer","",7,0,45));
+	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
+	{
+		(*i)->Sumw2();
+	}
 
 	unsigned totalZ=0;
 	//make npart
@@ -101,8 +105,8 @@ void hemiTrackHister(){
 		(*i)->Scale(bins[count]);
 		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
 		(*i)->SetLineColor(colors[count]);
-		if (count++==0)(*i)->Draw();
-		else (*i)->Draw("same");
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
 		tl->AddEntry((*i),(*i)->GetName(),"l");
 	}
 	tl->Draw();
