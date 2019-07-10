@@ -124,6 +124,7 @@ int main (int argc, char *argv[]) {
   t->Branch ("part_pt", &b_part_pt);
   t->Branch ("part_eta", &b_part_eta);
   t->Branch ("part_phi", &b_part_phi);
+  t->Branch ("part_child", &b_part_Zchild);
 
   /*t->Branch ("l_n",   &b_l_n);
   t->Branch ("l_pt",  &b_l_pt);
@@ -147,10 +148,15 @@ int main (int argc, char *argv[]) {
 
   double tagTimeInSeconds;
   double searchTimeInSeconds=0;
+  double pythiaTimeInSeconds=0;
 
   for (int iEvent = 0; iEvent < NEVT; iEvent++) {
+    clock_t startPythia = clock();
     if (!pythia.next ())
       continue;
+    clock_t endPythia = clock();
+    pythiaTimeInSeconds+=(endPythia-startPythia) / (double) CLOCKS_PER_SEC;
+    
 
     b_z_n = 0;
     b_z_pt.clear ();
@@ -206,7 +212,7 @@ int main (int argc, char *argv[]) {
         b_part_n++;
       }
 
-      if (pythia.event[i].pT()>=25&& abs (pythia.event[i].id ()) == 23&& (abs(pythia.event[pythia.event[i].daughter1()].id())==11 || abs(pythia.event[pythia.event[i].daughter1()].id())==13)) { // check if Z
+      if (pythia.event[i].pT()>=25&& abs(pythia.event[i].id ()) == 23 /*&& (abs(pythia.event[pythia.event[i].daughter1()].id())==11 || abs(pythia.event[pythia.event[i].daughter1()].id())==13)*/) { // check if final Z with pT>25
         b_z_pt.push_back (pythia.event[i].pT ());
         b_z_eta.push_back (pythia.event[i].eta ());
         b_z_phi.push_back (pythia.event[i].phi ());
@@ -304,6 +310,6 @@ int main (int argc, char *argv[]) {
   f->Write();
   f->Close();
 	
-	cout<<"Done with Tagtime="<<tagTimeInSeconds<<" search time="<<searchTimeInSeconds<<std::endl;
+	cout<<"Done with pythiatime="<<pythiaTimeInSeconds<<std::endl;
   return 0;
 }
