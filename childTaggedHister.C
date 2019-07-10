@@ -96,8 +96,7 @@ void childTaggedHister(){
 
 	unsigned totalZ=0;
 
-	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
-		t->GetEntry (iEvt);
+	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {t->GetEntry (iEvt);
 		if(z_n!=1)continue;
 		totalZ+=z_n;
 		for (unsigned i=0; i < part_pt->size(); i++) {
