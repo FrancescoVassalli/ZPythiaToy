@@ -205,7 +205,7 @@ int main (int argc, char *argv[]) {
 			//}
 
 
-			if (pythia.event[i].isFinal() && pythia.event[i].pT() >= 2 && pythia.event[i].isCharged()) {//record track info
+			if (pythia.event[i].pT() >= 2 && pythia.event[i].isCharged() && pythia.event[i].isFinal()) {//record track info
 				b_part_pt.push_back (pythia.event[i].pT ());
 				b_part_eta.push_back (pythia.event[i].eta ());
 				b_part_phi.push_back (pythia.event[i].phi ());
