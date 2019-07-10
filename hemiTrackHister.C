@@ -43,27 +43,33 @@ void hemiTrackHister(){
 	t->SetBranchAddress ("part_eta",  &part_eta);
 	t->SetBranchAddress ("part_phi",  &part_phi);
 
-	TH1F *central = new TH1F("central","",15,0,45);
-	TH1F *medium = new  TH1F("medium","",15,0,45);
-	TH1F *outer = new   TH1F("outer","",15,0,45);
+	std::vector<TH1F*> ntrack_plots;
+	ntrack_plots.push_back(new TH1F("central","",15,0,45));
+	ntrack_plots.push_back(new TH1F("medium","",15,0,45));
+	ntrack_plots.push_back(new TH1F("outer","",15,0,45));
 
 	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
-    t->GetEntry (iEvt);
+    	t->GetEntry (iEvt);
 		if(z_n!=1)continue;
 		for (unsigned i=0; i < part_pt->size(); i++) {
 			if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<3*TMath::Pi()/4){
-				central->Fill(part_pt->at(i));
+				ntrack_plots[0]->Fill(part_pt->at(i));
 			}
 			else if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<15*TMath::Pi()/16){
-				medium->Fill(part_pt->at(i));
+				ntrack_plots[1]->Fill(part_pt->at(i));
 			}
 			else if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<TMath::Pi()){
-				outer->Fill(part_pt->at(i));
+				ntrack_plots[2]->Fill(part_pt->at(i));
 			}
 		}
 	}
-
+	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
+	{
+		TCanvas* tc = new TCanvas();
+		(*i)->Scale(1/(*i)->Integral());
+		(*i)->Draw();
+	}
 
 	thisFile->Write();
-	thisFile->Close();
+	//thisFile->Close();
 }

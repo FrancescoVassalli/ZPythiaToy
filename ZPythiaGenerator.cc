@@ -14,6 +14,8 @@
 #include "Pythia8/Event.h"
 #include "Pythia8/Basics.h"
 
+#include <ctime>
+
 //#include <Utilities.h>
 
 using namespace Pythia8;
@@ -47,7 +49,7 @@ void tagChildren(Pythia8::Particle parent,std::set<int>* childIndexSet,Pythia* p
 
 int main (int argc, char *argv[]) {
 
-  if (argc != 4) {
+  if (argc < 4) {
 		cout<<"args error"<<endl;
 
   }
@@ -61,16 +63,19 @@ int main (int argc, char *argv[]) {
 	pythia.readString("23:onIfAny = 11 13");
 
   pythia.readString ("WeakZ0:gmZmode = 2"); // set to Z's
-//  pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
-//  pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
-//  pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
+  if (argc==4)
+  {
+    pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
+    pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
+    pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
+    pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
+    pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
+  }
+  
   pythia.readString ("WeakBosonAndParton:qqbar2gmZg = on");   // code 241
   pythia.readString ("WeakBosonAndParton:qg2gmZq = on");      // code 242
-//  pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
- // pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
 
   ostringstream ss; ss << "PhaseSpace:pTHatMin = " << argv[1] << ".";
-  //pythia.readString("PhaseSpace:pTHatMin = 10.");
   pythia.readString (ss.str ().c_str ());
   pythia.readString ("PhaseSpace:mHatMin = 60");
 
@@ -140,6 +145,9 @@ int main (int argc, char *argv[]) {
 
   TLorentzVector l1, l2;*/
 
+  double tagTimeInSeconds;
+  double searchTimeInSeconds=0;
+
   for (int iEvent = 0; iEvent < NEVT; iEvent++) {
     if (!pythia.next ())
       continue;
@@ -181,13 +189,20 @@ int main (int argc, char *argv[]) {
       //  b_z_n++;
       //}
       set<int> ZChildIndicies;
+      clock_t startTag = clock();
       tagChildren(pythia.event[5],&ZChildIndicies, &pythia);
+      clock_t endTag = clock();
+      clock_t tagTime = endTag - startTag;
+      tagTimeInSeconds = tagTime / (double) CLOCKS_PER_SEC;
 			
       if (pythia.event[i].isHadron() && pythia.event[i].pT() >= 2 && pythia.event[i].isCharged()) {//record track info
         b_part_pt.push_back (pythia.event[i].pT ());
         b_part_eta.push_back (pythia.event[i].eta ());
         b_part_phi.push_back (pythia.event[i].phi ());
+        clock_t startSearch = clock();
         b_part_Zchild.push_back(ZChildIndicies.count(i));
+        clock_t endSearch = clock();
+        searchTimeInSeconds+=(endSearch-startSearch) / (double) CLOCKS_PER_SEC;
         b_part_n++;
       }
 
@@ -289,6 +304,6 @@ int main (int argc, char *argv[]) {
   f->Write();
   f->Close();
 	
-	cout<<"Done"<<std::endl;
+	cout<<"Done with Tagtime="<<tagTimeInSeconds<<" search time="<<searchTimeInSeconds<<std::endl;
   return 0;
 }
