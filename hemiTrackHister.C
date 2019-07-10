@@ -8,8 +8,8 @@
 using namespace std;
 
 void hemiTrackHister(){
-  TFile* f = new TFile("FranZOut.root", "READ");
-  TTree* t = (TTree*) f->Get("tree");
+	TFile* f = new TFile("hemiout.root", "READ");
+	TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("zplots.root","RECREATE");
 
 	int code;
@@ -49,7 +49,7 @@ void hemiTrackHister(){
 	ntrack_plots.push_back(new TH1F("outer","",15,0,45));
 
 	for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
-    	t->GetEntry (iEvt);
+		t->GetEntry (iEvt);
 		if(z_n!=1)continue;
 		for (unsigned i=0; i < part_pt->size(); i++) {
 			if(TMath::Abs(part_phi->at(i)-z_phi->at(0))<3*TMath::Pi()/4){
