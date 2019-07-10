@@ -8,9 +8,9 @@
 using namespace std;
 
 double InTwoPi (double phi) {
-  while (phi < 0 || 2*pi <= phi) {
-   if (phi < 0) phi += 2*pi;
-   else phi -= 2*pi;
+  while (phi < 0 || 2*TMath::Pi() <= phi) {
+   if (phi < 0) phi += 2*TMath::Pi();
+   else phi -= 2*TMath::Pi();
   }
   return phi;
 }
@@ -19,7 +19,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
   phi1 = InTwoPi(phi1);
   phi2 = InTwoPi(phi2);
   double dphi = abs(phi1 - phi2);
-  while (dphi > pi) dphi = abs (dphi - 2*pi);
+  while (dphi > TMath::Pi()) dphi = abs (dphi - 2*TMath::Pi());
 
   if (sign && InTwoPi (phi2 + dphi) == phi1)
      dphi *= -1;
