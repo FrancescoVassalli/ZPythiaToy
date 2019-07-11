@@ -164,6 +164,7 @@ int main (int argc, char *argv[]) {
 		 t->Branch ("jet_r10_e",   &b_jet_r10_e);
 		 */
 	double pythiaTimeInSeconds=0;
+	unsigned nFinalChildren=0;
 
 	for (int iEvent = 0; iEvent < NEVT; iEvent++) {
 		clock_t startPythia = clock();
@@ -200,6 +201,10 @@ int main (int argc, char *argv[]) {
 
 		set<int> partonChildIndicies;
 		tagChildren(pythia.event[6],&partonChildIndicies, &pythia);
+		for (std::set<int>::iterator i = partonChildIndicies.begin(); i != partonChildIndicies.end(); ++i)
+		{
+			if(pythia.event[(*i)].isFinal()) nFinalChildren++;
+		}
 
 		//cout<<"children of "<<pythia.event[6].id()<<"\n";
 		/*for (std::set<int>::iterator it = ZChildIndicies.begin(); it != ZChildIndicies.end(); ++it)
@@ -342,6 +347,7 @@ int main (int argc, char *argv[]) {
 	f->Write();
 	f->Close();
 
+	cout<<"Children per Z="<<(double)nFinalChildren/NEVT<<'\n';
 	cout<<"Done with pythiatime="<<pythiaTimeInSeconds<<std::endl;
 	return 0;
 }
