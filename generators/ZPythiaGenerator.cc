@@ -243,47 +243,51 @@ int main (int argc, char *argv[]) {
 			//  b_z_n++;
 			//}
 
-			//record track info
 			if (pythia.event[i].pT() >= 2 && pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta())<2.5) {
+				//reconstruct z
 				if (pythia.event[i].isLepton())
 				{
 					if (!l1)
 					{
 						l1 = new TLorentzVector();
-						tl->SetPtEtaPhiM(pythia.event[i].pT (), pythia.event[i].eta (), pythia.event[i].phi (), pythia.event[i].m ());
-						for (int j = 0; j < i; j++) {
+						l1->SetPtEtaPhiM(pythia.event[i].pT (), pythia.event[i].eta (), pythia.event[i].phi (), pythia.event[i].m ());
+						for (int j = i+1; j <pythia.event.size () ; j++) {
 
-							if (!pythia.event[j].isFinal()) continue; // check if in final state
-
-							if (pythia.event[i].id () != -pythia.event[j].id ()) continue; // check if anti-particle of first particle
-
-							l2.SetPtEtaPhiM (pythia.event[j].pT (), pythia.event[j].eta (), pythia.event[j].phi (), pythia.event[j].m ());
-
-							if ((l1+l2).M () < 40) continue; // loose invariant mass cut to make sure these are from Z decays
-
-							// reconstruct Z
-							b_z_pt.push_back ((l1+l2).Pt ());
-							b_z_eta.push_back ((l1+l2).Eta ());
-							b_z_phi.push_back ((l1+l2).Phi ());
-							b_z_m.push_back ((l1+l2).M ());
-							b_z_n++;
+							if (pythia.event[j].isFinal()&&pythia.event[i].id () == -pythia.event[j].id ()) {
+								l2 = new TLorentzVector();
+								l2->SetPtEtaPhiM(pythia.event[j].pT (), pythia.event[j].eta (), pythia.event[j].phi (), pythia.event[j].m ());
+								if ((*l1+*l2).M () >40 )
+								{
+									b_z_pt.push_back ((*l1+*l2).Pt ());
+									b_z_eta.push_back ((*l1+*l2).Eta ());
+									b_z_phi.push_back ((*l1+*l2).Phi ());
+									b_z_m.push_back ((*l1+*l2).M ());
+									b_z_n++;
+								}
+								delete l2;
+								l2 = nullptr;
+							}
 						}
-					}
-					else{
-
+						delete l1;
+						l1=nullptr;
 					}
 				}
-				b_part_pt.push_back (pythia.event[i].pT ());
-				b_part_eta.push_back (pythia.event[i].eta ());
-				b_part_phi.push_back (pythia.event[i].phi ());
-				b_part_child.push_back(partonChildIndicies.count(i));
+				//record tracks
+				if (!pythia.event[i].isLepton())
+				{
+					b_part_pt.push_back (pythia.event[i].pT ());
+					b_part_eta.push_back (pythia.event[i].eta ());
+					b_part_phi.push_back (pythia.event[i].phi ());
+					b_part_child.push_back(partonChildIndicies.count(i));
+				}
+				
 				if (partonChildIndicies.count(i))
 				{
 					tempChildCount++;
 				}
 				b_part_n++;
 			}
-			//record the info for the final Z
+			/*record the info for the final Z using event record
 			if (pythia.event[i].pT()>=25&& abs(pythia.event[i].id ()) == 23 
 					&& (abs(pythia.event[pythia.event[i].daughter1()].id())==11 
 						|| abs(pythia.event[pythia.event[i].daughter1()].id())==13)) {
@@ -296,7 +300,7 @@ int main (int argc, char *argv[]) {
 				b_z_phi.push_back (pythia.event[i].phi ());
 				b_z_m.push_back (pythia.event[i].m ());
 				b_z_n++;
-			}
+			}*/
 		}
 		if (b_z_n !=1) {//check there is Z in event
 			iEvent--;
