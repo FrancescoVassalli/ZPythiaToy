@@ -4,8 +4,10 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include "Utilities.C"
 
 using namespace std;
+using namespace atlashi;
 
 namespace {
 	double InTwoPi (double phi) {
@@ -34,7 +36,7 @@ void childTaggedHister(){
 	gStyle->SetOptStat(0);
 	TFile *thisFile = new TFile("../plots/zplots.root","RECREATE");
 
-	string name = "childTaggedHister";
+	string name = "../pythiadata/childTaggedHister";
 	string extention = ".root";
 	std::vector<string> options;
 	options.push_back("fff");
@@ -59,7 +61,7 @@ void childTaggedHister(){
 	for (std::vector<TChain*>::iterator chainpointer = chains.begin(); chainpointer != chains.end(); ++chainpointer)
 	{
 		TChain* t=*chainpointer;
-		
+
 		int code;
 		int id1;
 		int id2;
@@ -94,17 +96,18 @@ void childTaggedHister(){
 		t->SetBranchAddress ("part_child", &part_child);
 
 		std::vector<TH1F*> ntrack_plots;
-		ntrack_plots.push_back(new TH1F((*nameit+" near").c_str(),"",15,0,45));
-		ntrack_plots.push_back(new TH1F((*nameit+" middle").c_str(),"",15,0,45));
-		ntrack_plots.push_back(new TH1F((*nameit+" away").c_str(),"",15,0,45));
+
+		ntrack_plots.push_back(new TH1F((*nameit+" near").c_str(),"",7,logspace(2,65,7)));
+		ntrack_plots.push_back(new TH1F((*nameit+" middle").c_str(),"",7,logspace(2,65,7)));
+		ntrack_plots.push_back(new TH1F((*nameit+" away").c_str(),"",7,logspace(2,65,7)));
 		for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
 		}
 
 		std::vector<TH1F*> ntrackChild_plots;
-		ntrackChild_plots.push_back(new TH1F((*nameit+" child_ntrack").c_str(),"",15,0,45));
-		ntrackChild_plots.push_back(new TH1F((*nameit+" forgein_ntrack").c_str(),"",15,0,45));
+		ntrackChild_plots.push_back(new TH1F((*nameit+" child_ntrack").c_str(),"",7,logspace(2,65,7)));
+		ntrackChild_plots.push_back(new TH1F((*nameit+" forgein_ntrack").c_str(),"",7,logspace(2,65,7)));
 		for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
@@ -145,7 +148,6 @@ void childTaggedHister(){
 				}
 			}
 		}
-		cout<<"not here"<<endl;
 
 		//plot the npart with dphi groups
 		TCanvas* tc = new TCanvas();
@@ -154,7 +156,7 @@ void childTaggedHister(){
 		unsigned count=0;
 		short colors[3]={kBlack,kRed,kBlue};
 		double bins[3]={2/TMath::Pi(),16./(3*TMath::Pi()),16./TMath::Pi()};
-		TLegend* tl = new TLegend(.2,.1,.4,.4);
+		TLegend* tl = new TLegend(.8,.7,.9,.95);
 		for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 		{
 			(*i)->Scale(1./totalZ,"width");
