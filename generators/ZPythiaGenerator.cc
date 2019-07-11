@@ -51,7 +51,6 @@ int main (int argc, char *argv[]) {
 
 	if (argc < 4) {
 		cout<<"args error"<<endl;
-
 	}
 
 	// Generator. Process selection. LHC initialization. Histogram.
@@ -146,11 +145,11 @@ int main (int argc, char *argv[]) {
 	t->Branch ("part_phi", &b_part_phi);
 	t->Branch ("part_child", &b_part_child);
 
-	t->Branch ("l_pt",  &b_l_pt);
-	t->Branch ("l_eta", &b_l_eta);
-	t->Branch ("l_phi", &b_l_phi);
-	t->Branch ("l_m",   &b_l_m);
-	/*
+	/* t->Branch ("l_pt",  &b_l_pt);
+		 t->Branch ("l_eta", &b_l_eta);
+		 t->Branch ("l_phi", &b_l_phi);
+		 t->Branch ("l_m",   &b_l_m);
+
 		 t->Branch ("jet_r04_n",   &b_jet_r04_n);
 		 t->Branch ("jet_r04_pt",  &b_jet_r04_pt);
 		 t->Branch ("jet_r04_eta", &b_jet_r04_eta);
@@ -161,10 +160,11 @@ int main (int argc, char *argv[]) {
 		 t->Branch ("jet_r10_pt",  &b_jet_r10_pt);
 		 t->Branch ("jet_r10_eta", &b_jet_r10_eta);
 		 t->Branch ("jet_r10_phi", &b_jet_r10_phi);
-		 t->Branch ("jet_r10_e",   &b_jet_r10_e);
-		 */
+		 t->Branch ("jet_r10_e",   &b_jet_r10_e);*/
+
 	double pythiaTimeInSeconds=0;
 	unsigned nFinalChildren=0;
+	unsigned totalGluon=0;
 
 	for (int iEvent = 0; iEvent < NEVT; iEvent++) {
 		clock_t startPythia = clock();
@@ -184,39 +184,44 @@ int main (int argc, char *argv[]) {
 		b_part_pt.clear ();
 		b_part_eta.clear ();
 		b_part_phi.clear ();
+		b_part_child.clear();
 
-		//get the lepton info
-		set<int> ZChildIndicies;
-		tagChildren(pythia.event[5],&ZChildIndicies, &pythia);
-		set<int>::reverse_iterator rit=ZChildIndicies.rbegin();
-		b_l_phi.push_back(pythia.event[*rit].phi());
-		b_l_eta.push_back(pythia.event[*rit].eta());
-		b_l_pt.push_back(pythia.event[*rit].pT());
-		b_l_m.push_back(pythia.event[*rit].m());
-		++rit;
-		b_l_phi.push_back(pythia.event[*rit].phi());
-		b_l_eta.push_back(pythia.event[*rit].eta());
-		b_l_pt.push_back(pythia.event[*rit].pT());
-		b_l_m.push_back(pythia.event[*rit].m());
+		b_l_phi.clear();
+		b_l_eta.clear();
+		b_l_pt.clear();
+		b_l_m.clear();
+
+
+		/*get the lepton info using event record 
+			set<int> ZChildIndicies;
+			tagChildren(pythia.event[5],&ZChildIndicies, &pythia);
+			set<int>::reverse_iterator rit=ZChildIndicies.rbegin();
+			b_l_phi.push_back(pythia.event[*rit].phi());
+			b_l_eta.push_back(pythia.event[*rit].eta());
+			b_l_pt.push_back(pythia.event[*rit].pT());
+			b_l_m.push_back(pythia.event[*rit].m());
+			++rit;
+			b_l_phi.push_back(pythia.event[*rit].phi());
+			b_l_eta.push_back(pythia.event[*rit].eta());
+			b_l_pt.push_back(pythia.event[*rit].pT());
+			b_l_m.push_back(pythia.event[*rit].m());*/
 
 		set<int> partonChildIndicies;
 		tagChildren(pythia.event[6],&partonChildIndicies, &pythia);
-		for (std::set<int>::iterator i = partonChildIndicies.begin(); i != partonChildIndicies.end(); ++i)
-		{
-			if(pythia.event[(*i)].isFinal()) nFinalChildren++;
-		}
+		/*for (std::set<int>::iterator i = partonChildIndicies.begin(); i != partonChildIndicies.end(); ++i)
+			{
+			if(pythia.event[(*i)].isFinal()&&pythia.event[(*i)].pT()>2&&pythia.event[(*i)].isHadron()&& TMath::Abs(pythia.event[(*i)].eta())<2.5) nFinalChildren++;
+			}*/
 
 		//cout<<"children of "<<pythia.event[6].id()<<"\n";
 		/*for (std::set<int>::iterator it = ZChildIndicies.begin(); it != ZChildIndicies.end(); ++it)
 			{
 			cout<<(*it)<<'\n';
 			}*/
-
+		unsigned tempChildCount = 0;
+		TLorentzVector *l1=nullptr,*l2=nullptr;
 		for (int i = 0; i < pythia.event.size (); i++) {
 
-			//if (!pythia.event[i].isFinal()) continue; // check if in final state
-
-			//if (abs (pythia.event[i].id ()) != 11 && abs (pythia.event[i].id ()) != 13) continue; // check if electron or muon, resp.
 
 			//l1.SetPtEtaPhiM (pythia.event[i].pT (), pythia.event[i].eta (), pythia.event[i].phi (), pythia.event[i].m ());
 
@@ -239,17 +244,53 @@ int main (int argc, char *argv[]) {
 			//}
 
 			//record track info
-			if (pythia.event[i].pT() >= 2 && pythia.event[i].isFinal() && pythia.event[i].isHadron() && TMath::Abs(pythia.event[i].eta())<2.5) {
+			if (pythia.event[i].pT() >= 2 && pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta())<2.5) {
+				if (pythia.event[i].isLepton())
+				{
+					if (!l1)
+					{
+						l1 = new TLorentzVector();
+						tl->SetPtEtaPhiM(pythia.event[i].pT (), pythia.event[i].eta (), pythia.event[i].phi (), pythia.event[i].m ());
+						for (int j = 0; j < i; j++) {
+
+							if (!pythia.event[j].isFinal()) continue; // check if in final state
+
+							if (pythia.event[i].id () != -pythia.event[j].id ()) continue; // check if anti-particle of first particle
+
+							l2.SetPtEtaPhiM (pythia.event[j].pT (), pythia.event[j].eta (), pythia.event[j].phi (), pythia.event[j].m ());
+
+							if ((l1+l2).M () < 40) continue; // loose invariant mass cut to make sure these are from Z decays
+
+							// reconstruct Z
+							b_z_pt.push_back ((l1+l2).Pt ());
+							b_z_eta.push_back ((l1+l2).Eta ());
+							b_z_phi.push_back ((l1+l2).Phi ());
+							b_z_m.push_back ((l1+l2).M ());
+							b_z_n++;
+						}
+					}
+					else{
+
+					}
+				}
 				b_part_pt.push_back (pythia.event[i].pT ());
 				b_part_eta.push_back (pythia.event[i].eta ());
 				b_part_phi.push_back (pythia.event[i].phi ());
 				b_part_child.push_back(partonChildIndicies.count(i));
+				if (partonChildIndicies.count(i))
+				{
+					tempChildCount++;
+				}
 				b_part_n++;
 			}
 			//record the info for the final Z
 			if (pythia.event[i].pT()>=25&& abs(pythia.event[i].id ()) == 23 
 					&& (abs(pythia.event[pythia.event[i].daughter1()].id())==11 
 						|| abs(pythia.event[pythia.event[i].daughter1()].id())==13)) {
+				if (b_z_pt.size()>=1)
+				{
+					cout<<i<<":\n \t"<<pythia.event[i].pT ()<<"\n \t"<<pythia.event[i].m ()<<'\n';
+				}
 				b_z_pt.push_back (pythia.event[i].pT ());
 				b_z_eta.push_back (pythia.event[i].eta ());
 				b_z_phi.push_back (pythia.event[i].phi ());
@@ -257,9 +298,14 @@ int main (int argc, char *argv[]) {
 				b_z_n++;
 			}
 		}
-		if (b_z_n == 0) {//check there is Z in event
+		if (b_z_n !=1) {//check there is Z in event
 			iEvent--;
 			continue;
+		}
+		nFinalChildren+=tempChildCount;
+		if (pythia.event[6].id()==21)
+		{
+			totalGluon++;
 		}
 
 		//antikT04->analyze (pythia.event);
@@ -274,6 +320,7 @@ int main (int argc, char *argv[]) {
 
 		b_isValence1 = pythia.info.isValence1 ();
 		b_isValence2 = pythia.info.isValence2 ();
+		t->Fill();
 
 		/*b_l_n = 0;
 			b_l_pt.clear ();
@@ -336,7 +383,6 @@ int main (int argc, char *argv[]) {
 			b_jet_r10_n++;
 			}*/
 
-		t->Fill();
 
 		if (NEVT>100&&iEvent % (NEVT/100) == 0)
 			std::cout << iEvent / (NEVT/100) << "\% done...\r" << std::flush;
@@ -347,7 +393,8 @@ int main (int argc, char *argv[]) {
 	f->Write();
 	f->Close();
 
-	cout<<"Children per Z="<<(double)nFinalChildren/NEVT<<'\n';
+	cout<<"Children ="<<(double)nFinalChildren<<'\n';
+	cout<<"gluon fraction="<<(double)totalGluon/NEVT<<'\n';
 	cout<<"Done with pythiatime="<<pythiaTimeInSeconds<<std::endl;
 	return 0;
 }

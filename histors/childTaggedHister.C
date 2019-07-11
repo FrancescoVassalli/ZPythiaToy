@@ -40,22 +40,19 @@ void childTaggedHister(){
 	string extention = ".root";
 	std::vector<string> options;
 	options.push_back("fff");
-	options.push_back("ffo");
-	options.push_back("fof");
-	options.push_back("off");
+	//options.push_back("ffo");
+	//options.push_back("fof");
+	//options.push_back("off");
 
 	std::vector<TChain*> chains;
-	chains.push_back(new TChain("tree"));
-	chains.push_back(new TChain("tree"));
-	chains.push_back(new TChain("tree"));
-	chains.push_back(new TChain("tree"));
-
+	
 	for (unsigned i=0; i<options.size();++i)
 	{
+		chains.push_back(new TChain("tree"));
 		string name1 = name+options[i]+"1"+extention;
 		string name2 = name+options[i]+"2"+extention;
 		chains[i]->Add(name1.c_str());
-		chains[i]->Add(name2.c_str());
+		//chains[i]->Add(name2.c_str());
 	}
 	std::vector<string>::iterator nameit=options.begin();
 	for (std::vector<TChain*>::iterator chainpointer = chains.begin(); chainpointer != chains.end(); ++chainpointer)
@@ -122,7 +119,7 @@ void childTaggedHister(){
 		}
 
 		unsigned totalZ=0;
-
+		unsigned totalChildren=0;
 		for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
 			t->GetEntry (iEvt);
 			if(z_n!=1)continue;
@@ -137,18 +134,21 @@ void childTaggedHister(){
 				else if(DeltaPhi(part_phi->at(i),z_phi->at(0))<TMath::Pi()&&DeltaPhi(part_phi->at(i),z_phi->at(0))>15*TMath::Pi()/16){
 					ntrack_plots[2]->Fill(part_pt->at(i));
 				}
+				cout<<part_child->at(i)<<',';
 				if (part_child->at(i))
 				{
 					dphi_plots[0]->Fill(DeltaPhi(part_phi->at(i),z_phi->at(0)));
 					ntrackChild_plots[0]->Fill(part_pt->at(i));
+					totalChildren++;
 				}
 				else{
 					ntrackChild_plots[1]->Fill(part_pt->at(i));
 					dphi_plots[1]->Fill(DeltaPhi(part_phi->at(i),z_phi->at(0)));
 				}
 			}
+			cout<<'\n';
 		}
-
+		cout<<"children per Z="<<(double) totalChildren/totalZ<<'\n';
 		//plot the npart with dphi groups
 		TCanvas* tc = new TCanvas();
 		tc->SetLogy();
@@ -161,13 +161,14 @@ void childTaggedHister(){
 		{
 			(*i)->Scale(1./totalZ,"width");
 			(*i)->Scale(bins[count]);
-			(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
+			(*i)->GetYaxis()->SetRangeUser(10e-8,10e1);
 			(*i)->SetLineColor(colors[count]);
 			if (count++==0)(*i)->Draw("e1");
 			else (*i)->Draw("e1 same");
 			tl->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tl->Draw();
+		cout<<"jeff integral ="<<ntrack_plots[0]->Integral("width")+ntrack_plots[1]->Integral("width")+ntrack_plots[2]->Integral("width")<<'\n';
 		tc->SaveAs(("../plots/"+*nameit+"_npart_dphi.pdf").c_str());
 
 		//plot the npart with child groups
@@ -175,7 +176,7 @@ void childTaggedHister(){
 		TCanvas* tcC = new TCanvas();
 		tcC->SetLogy();
 		tcC->SetLogx();
-		TLegend* tlC = new TLegend(.2,.1,.4,.4);
+		TLegend* tlC = new TLegend(.8,.7,.9,.95);
 		for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
 		{
 			(*i)->Scale(1./totalZ,"width");
@@ -185,33 +186,35 @@ void childTaggedHister(){
 			else (*i)->Draw("e1 same");
 			tlC->AddEntry((*i),(*i)->GetName(),"l");
 		}
+		double error,error2;
+		cout<<"children integral ="<<ntrackChild_plots[0]->IntegralAndError(1,7,error2,"width")<<"+/"<<error2<<" not="<<ntrackChild_plots[1]->IntegralAndError(1,7,error,"width")<<"+/"<<error<<'\n';
 		tlC->Draw();
-		tc->SaveAs(("../plots/"+*nameit+"_npart_child.pdf").c_str());
+		tcC->SaveAs(("../plots/"+*nameit+"_npart_child.pdf").c_str());
 
 		//plot the dphi
 		TCanvas* tc2 = new TCanvas();
 		tc2->SetLogy();
 		count=0;
-		TLegend* tl2 = new TLegend(.2,.1,.4,.4);
+		TLegend* tl2 = new TLegend(.15,.8,.25,.9);
 		for (std::vector<TH1F*>::iterator i = dphi_plots.begin(); i != dphi_plots.end(); ++i)
 		{
 			(*i)->Scale(1./totalZ,"width");
 			(*i)->SetLineColor(colors[count]);
-			(*i)->GetYaxis()->SetRangeUser(10e-3,10e1);
+			(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
 			if (count++==0)(*i)->Draw("e1");
 			else (*i)->Draw("e1 same");
 			tl2->AddEntry((*i),(*i)->GetName(),"l");
 		}
 		tl2->Draw();
-		tc->SaveAs(("../plots/"+*nameit+"_child_dphi.pdf").c_str());
+		tc2->SaveAs(("../plots/"+*nameit+"_child_dphi.pdf").c_str());
 
 		//compare dphi for initial parton children to mpi
 		TCanvas* tc3 = new TCanvas();
 		TH1F *diff = (TH1F*) dphi_plots[0]->Clone("dphi_diff");
 		diff->Add(dphi_plots[1],-1);
-		diff->GetYaxis()->SetRangeUser(-1,1);
+		diff->GetYaxis()->SetRangeUser(-10,10);
 		diff->Draw();
-		tc->SaveAs(("../plots/"+*nameit+"_diff_dphi.pdf").c_str());
+		tc3->SaveAs(("../plots/"+*nameit+"_diff_dphi.pdf").c_str());
 
 
 		thisFile->Write();
