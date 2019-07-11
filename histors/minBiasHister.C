@@ -4,16 +4,10 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include "Utilities.C"
 
 using namespace std;
-
-double InTwoPi (double phi) {
-  while (phi < 0 || 2*TMath::Pi() <= phi) {
-   if (phi < 0) phi += 2*TMath::Pi();
-   else phi -= 2*TMath::Pi();
-  }
-  return phi;
-}
+using namespace atlashi;
 
 double DeltaPhi (double phi1, double phi2, const bool sign=0) {
   phi1 = InTwoPi(phi1);
@@ -28,7 +22,7 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 }
 
 void minBiasHister(){
-	//gStyle->SetOptStat(0);
+	gStyle->SetOptStat(0);
 	TFile* f = new TFile("../pythiadata/minbias.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("../plots/minbias_plots.root","RECREATE");
@@ -39,7 +33,7 @@ void minBiasHister(){
 	t->SetBranchAddress ("part_eta",  &part_eta);
 	t->SetBranchAddress ("part_phi",  &part_phi);
 
-	TH1F* production = new TH1F("central","",7,0,45);
+	TH1F* production = new TH1F("minbias","",7,logspace(2,65,7));
 	production->Sumw2();
 
 	//make npart
@@ -56,7 +50,7 @@ void minBiasHister(){
 	production->Scale(1./t->GetEntries(),"width");
 	production->Scale(1/TMath::Pi());
 	production->Draw("e1");
-	
+	tc->SaveAs("minbias_npart.pdf");
 	thisFile->Write();
 	//thisFile->Close();
 }
