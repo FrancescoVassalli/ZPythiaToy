@@ -152,14 +152,51 @@ void child_dphi(TFile* thisFile, std::vector<string> types){
 
 }
 
+void child_pT(TFile* thisFile, std::vector<string> types){
+	std::vector<TH1F*> plots;
+	for (std::vector<string>::iterator i = types.begin(); i != types.end(); ++i)
+	{
+		plots.push_back((TH1F*) thisFile->Get(((*i)+" child_ntrack").c_str()));
+		plots.push_back((TH1F*) thisFile->Get(((*i)+" forgein_ntrack").c_str()));
+	}
+
+	TCanvas* tc = new TCanvas();
+	tc->SetLogy();
+	tc->SetTicky();
+	TLegend* tl = new TLegend(.6,.1,.9,.35);
+
+	unsigned count=0;
+	unsigned typeCount=0;
+	const int kMAXCOLOR=2;
+	short colors[2]={kBlack,kRed};
+	short styleTypes[4]={kOpenCircle,kFullTriangleUp,kOpenStar,kFullDiamond};
+	for (std::vector<TH1F*>::iterator i = plots.begin(); i != plots.end(); ++i)
+	{
+		(*i)->GetYaxis()->SetRangeUser(10e-5,10e1);
+		(*i)->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		(*i)->SetXTitle("#Delta#phi");
+		(*i)->SetLineColor(colors[count%kMAXCOLOR]);
+		(*i)->SetMarkerColor(colors[count%kMAXCOLOR]);
+		(*i)->SetMarkerStyle(styleTypes[typeCount]);
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
+		if (count%kMAXCOLOR==0) ++typeCount;
+		tl->AddEntry((*i),(*i)->GetName(),"p");
+	}
+	tl->Draw();
+	tc->SaveAs("../plots/child_dphi.pdf");
+
+}
+
 void plotter(){
 	std::vector<string> types;
 	types.push_back("inclusive_mpioff");
 	types.push_back("inclusive_mpion");
-	//types.push_back("forced_mpioff");
-	//types.push_back("forced_mpion");
+	types.push_back("forced_mpioff");
+	types.push_back("forced_mpion");
 	TFile *thisFile = new TFile("hists.root","READ");
 	//plotDPhi(thisFile,types);
 	//plotpT(thisFile,types);
-	child_dphi(thisFile,types);
+	//child_dphi(thisFile,types);
+	child_ntrack(thisFile,types);
 }
