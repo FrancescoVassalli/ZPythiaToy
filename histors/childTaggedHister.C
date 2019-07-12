@@ -178,6 +178,7 @@ void childTaggedHister(){
 		}
 
 		cout<<"children per Z="<<(double) totalChildren/totalZ<<'\n';
+		//phi bins
 		double bins[3]={2/TMath::Pi(),16./(3*TMath::Pi()),16./TMath::Pi()};
 		unsigned count=0;
 		for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
@@ -186,14 +187,17 @@ void childTaggedHister(){
 			(*i)->Scale(1./totalZ,"width");
 			count++;
 		}
+
 		for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
 		{
 			(*i)->Scale(1./totalZ,"width");
 		}
+
 		for (std::vector<TH1F*>::iterator i = dphi_child_plots.begin(); i != dphi_child_plots.end(); ++i)
 		{
 			(*i)->Scale(1./totalZ,"width");
 		}
+
 		bins[0]=lowptRange.second-lowptRange.first;
 		bins[1]=midptRange.second-midptRange.first;
 		bins[2]=highptRange.second-highptRange.first;
@@ -201,9 +205,7 @@ void childTaggedHister(){
 		for (std::vector<TH1F*>::iterator i = dphi_pt_plots.begin(); i != dphi_pt_plots.end(); ++i)
 		{
 			(*i)->Scale(1./totalZ,"width");
-			(*i)->Scale(bins[count]);
-			count++;
-
+			//(*i)->Scale(bins[count++]);
 		}
 
 		thisFile->Write();

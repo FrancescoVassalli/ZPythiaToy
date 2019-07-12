@@ -10,6 +10,7 @@ void plotDPhi(TFile* thisFile,std::vector<string> types){
 	}
 	TCanvas* tc = new TCanvas();
 	tc->SetLogy();
+	tc->SetTicky();
 
 	unsigned count=0;
 	short colors[3]={kBlack,kRed,kBlue};
@@ -19,7 +20,7 @@ void plotDPhi(TFile* thisFile,std::vector<string> types){
 	for (std::vector<TH1F*>::iterator i = dphi_pt_plots.begin(); i != dphi_pt_plots.end(); ++i)
 	{
 		(*i)->GetYaxis()->SetRangeUser(10e-5,10e1);
-		(*i)->SetYTitle("#frac{dN}{N}");
+		(*i)->SetYTitle("#frac{dN}{N d#Delta#phi}");
 		(*i)->SetXTitle("#Delta#phi");
 		(*i)->SetLineColor(colors[count%3]);
 		(*i)->SetMarkerColor(colors[count%3]);
@@ -49,7 +50,7 @@ void plotdiffpT(const std::vector<string>& types, std::vector<TH1F*> pt_plots){
 
 	//setup the canvas
 	TCanvas *tc2 = new TCanvas();
-	TLegend* tl2 = new TLegend(.7,.7,.9,.95);
+	TLegend* tl2 = new TLegend(.65,.1,.85,.25);
 	short colors[3]={kBlack,kRed,kBlue};
 	short styleTypes[4]={kOpenCircle,kFullTriangleUp,kOpenStar,kFullDiamond};
 
@@ -57,7 +58,9 @@ void plotdiffpT(const std::vector<string>& types, std::vector<TH1F*> pt_plots){
 	for (std::vector<TH1F*>::iterator i = subtracted_plots.begin(); i != subtracted_plots.end(); ++i)
 	{
 		(*i)->Add(pt_plots[count+3],-1); //subtract the plots
+		(*i)->GetYaxis()->SetRangeUser(-.4,.1); 
 		(*i)->SetYTitle("#frac{dN}{N} mpi:off-on");
+		(*i)->SetXTitle("pT [GeV/c]");
 		(*i)->SetLineColor(colors[count%3]); //color the plots
 		(*i)->SetMarkerColor(colors[count%3]);
 		if (count++==0)(*i)->Draw("e1");
@@ -66,8 +69,8 @@ void plotdiffpT(const std::vector<string>& types, std::vector<TH1F*> pt_plots){
 		caption=caption.substr(caption.find(" "));
 		tl2->AddEntry((*i),caption.c_str(),"p");
 	}
-	tc2->SaveAs("../plots/pTdiff.pdf");
 	tl2->Draw();
+	tc2->SaveAs("../plots/pTdiff.pdf");
 
 }
 
@@ -82,6 +85,7 @@ void plotpT(TFile* thisFile,std::vector<string> types){
 	TCanvas* tc = new TCanvas();
 	tc->SetLogy();
 	tc->SetLogx();
+	tc->SetTicky();
 	TLegend* tl = new TLegend(.7,.7,.9,.95);
 
 	unsigned count=0;
@@ -91,8 +95,8 @@ void plotpT(TFile* thisFile,std::vector<string> types){
 	for (std::vector<TH1F*>::iterator i = pt_plots.begin(); i != pt_plots.end(); ++i)
 	{
 		(*i)->GetYaxis()->SetRangeUser(10e-11,10e1);
-		(*i)->SetYTitle("#frac{dN}{N}");
-		(*i)->SetXTitle("pT");
+		(*i)->SetYTitle("#frac{dN}{N} d#Delta#phi d#DeltapT");
+		(*i)->SetXTitle("pT [GeV/c]");
 		(*i)->SetLineColor(colors[count%3]);
 		(*i)->SetMarkerColor(colors[count%3]);
 		(*i)->SetMarkerStyle(styleTypes[typeCount]);

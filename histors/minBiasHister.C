@@ -34,7 +34,6 @@ void minBiasHister(){
 	t->Add("../pythiadata/minbias8.root");
 	t->Add("../pythiadata/minbias9.root");
 	t->Add("../pythiadata/minbias10.root");
-	t->Add("../pythiadata/minbias11.root");
 	t->Add("../pythiadata/minbias12.root");
 	//TFile* f = new TFile("../pythiadata/minbias.root", "READ");
 	//TTree* t = (TTree*) f->Get("tree");
