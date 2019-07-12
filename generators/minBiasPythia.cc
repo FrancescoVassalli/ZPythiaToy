@@ -78,7 +78,7 @@ int main (int argc, char *argv[]) {
 		for (int i = 0; i < pythia.event.size (); i++) {
 
 			//record track info
-			if (pythia.event[i].pT() >= 2 && TMath::Abs(pythia.event[i].eta())<2.5&& !pythia.event[i].isLepton()) {
+			if (pythia.event[i].pT() >= 2 && TMath::Abs(pythia.event[i].eta())<2.5&& !pythia.event[i].isLepton()&&pythia.event[i].isFinal()) {
 				b_part_pt.push_back (pythia.event[i].pT ());
 				b_part_eta.push_back (pythia.event[i].eta ());
 				b_part_phi.push_back (pythia.event[i].phi ());
