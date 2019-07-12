@@ -50,10 +50,12 @@ void childTaggedHister(){
 	for (unsigned i=0; i<options.size();++i)
 	{
 		chains.push_back(new TChain("tree"));
-		string name1 = name+options[i]+"1"+extention;
+		/*string name1 = name+options[i]+"1"+extention;
 		string name2 = name+options[i]+"2"+extention;
 		chains[i]->Add(name1.c_str());
-		chains[i]->Add(name2.c_str());
+		chains[i]->Add(name2.c_str());*/
+		string name1 = name+options[i]+extention;
+		chains[i]->Add(name1.c_str());
 	}
 	std::vector<string>::iterator nameit=options.begin();
 	for (std::vector<TChain*>::iterator chainpointer = chains.begin(); chainpointer != chains.end(); ++chainpointer)
