@@ -156,8 +156,8 @@ void plotter(){
 	std::vector<string> types;
 	types.push_back("inclusive_mpioff");
 	types.push_back("inclusive_mpion");
-	types.push_back("forced_mpioff");
-	types.push_back("forced_mpion");
+	//types.push_back("forced_mpioff");
+	//types.push_back("forced_mpion");
 	TFile *thisFile = new TFile("hists.root","READ");
 	//plotDPhi(thisFile,types);
 	//plotpT(thisFile,types);
