@@ -23,8 +23,21 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 
 void minBiasHister(){
 	gStyle->SetOptStat(0);
-	TFile* f = new TFile("../pythiadata/minbias.root", "READ");
-	TTree* t = (TTree*) f->Get("tree");
+	TChain* t = new TChain("tree");
+	t->Add("../pythiadata/minbias1.root");
+	t->Add("../pythiadata/minbias2.root");
+	t->Add("../pythiadata/minbias3.root");
+	t->Add("../pythiadata/minbias4.root");
+	t->Add("../pythiadata/minbias5.root");
+	t->Add("../pythiadata/minbias6.root");
+	t->Add("../pythiadata/minbias7.root");
+	t->Add("../pythiadata/minbias8.root");
+	t->Add("../pythiadata/minbias9.root");
+	t->Add("../pythiadata/minbias10.root");
+	t->Add("../pythiadata/minbias11.root");
+	t->Add("../pythiadata/minbias12.root");
+	//TFile* f = new TFile("../pythiadata/minbias.root", "READ");
+	//TTree* t = (TTree*) f->Get("tree");
 	TFile *thisFile = new TFile("hists.root","UPDATE");
 
 	vector<float>* part_pt = nullptr, *part_eta = nullptr, *part_phi = nullptr;

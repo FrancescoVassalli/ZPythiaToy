@@ -33,6 +33,44 @@ void plotDPhi(TFile* thisFile,std::vector<string> types){
 	tc->SaveAs("../plots/dphi.pdf");
 }
 
+void plotdiffpT(const std::vector<string>& types, std::vector<TH1F*> pt_plots){
+	//can only subtract two data sets
+	if (types.size()!=2)
+	{
+		cout<<"num datasets!=2 difference is not defined"<<endl;
+		return;
+	}
+
+	//make the new plots
+	std::vector<TH1F*> subtracted_plots;
+	subtracted_plots.push_back((TH1F*)pt_plots[0]->Clone());
+	subtracted_plots.push_back((TH1F*)pt_plots[1]->Clone());
+	subtracted_plots.push_back((TH1F*)pt_plots[2]->Clone());
+
+	//setup the canvas
+	TCanvas *tc2 = new TCanvas();
+	TLegend* tl2 = new TLegend(.7,.7,.9,.95);
+	short colors[3]={kBlack,kRed,kBlue};
+	short styleTypes[4]={kOpenCircle,kFullTriangleUp,kOpenStar,kFullDiamond};
+
+	unsigned count=0;
+	for (std::vector<TH1F*>::iterator i = subtracted_plots.begin(); i != subtracted_plots.end(); ++i)
+	{
+		(*i)->Add(pt_plots[count+3],-1); //subtract the plots
+		(*i)->SetYTitle("#frac{dN}{N} mpi:off-on");
+		(*i)->SetLineColor(colors[count%3]); //color the plots
+		(*i)->SetMarkerColor(colors[count%3]);
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
+		string caption((*i)->GetName());
+		caption=caption.substr(caption.find(" "));
+		tl2->AddEntry((*i),caption.c_str(),"p");
+	}
+	tc2->SaveAs("../plots/pTdiff.pdf");
+	tl2->Draw();
+
+}
+
 void plotpT(TFile* thisFile,std::vector<string> types){
 	std::vector<TH1F*> pt_plots;
 	for (std::vector<string>::iterator i = types.begin(); i != types.end(); ++i)
@@ -44,21 +82,15 @@ void plotpT(TFile* thisFile,std::vector<string> types){
 	TCanvas* tc = new TCanvas();
 	tc->SetLogy();
 	tc->SetLogx();
-
-	std::vector<TH1F*> subtracted_plots;
-	subtracted_plots.push_back((TH1F*)pt_plots[0]->Clone());
-	subtracted_plots.push_back((TH1F*)pt_plots[1]->Clone());
-	subtracted_plots.push_back((TH1F*)pt_plots[2]->Clone());
-
+	TLegend* tl = new TLegend(.7,.7,.9,.95);
 
 	unsigned count=0;
+	unsigned typeCount=0;
 	short colors[3]={kBlack,kRed,kBlue};
 	short styleTypes[4]={kOpenCircle,kFullTriangleUp,kOpenStar,kFullDiamond};
-	unsigned typeCount=0;
-	TLegend* tl = new TLegend(.7,.7,.9,.95);
 	for (std::vector<TH1F*>::iterator i = pt_plots.begin(); i != pt_plots.end(); ++i)
 	{
-		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
+		(*i)->GetYaxis()->SetRangeUser(10e-11,10e1);
 		(*i)->SetYTitle("#frac{dN}{N}");
 		(*i)->SetXTitle("pT");
 		(*i)->SetLineColor(colors[count%3]);
@@ -77,26 +109,15 @@ void plotpT(TFile* thisFile,std::vector<string> types){
 	tl->Draw();
 	tc->SaveAs("../plots/pT.pdf");
 
-	TCanvas *tc2 = new TCanvas();
-	count=0;
-	TLegend* tl2 = new TLegend(.7,.7,.9,.95);
-	for (std::vector<TH1F*>::iterator i = subtracted_plots.begin(); i != subtracted_plots.end(); ++i)
-	{
-		(*i)->Add(pt_plots[count+3],-1);
-		(*i)->SetLineColor(colors[count%3]);
-		if (count++==0)(*i)->Draw("e1");
-		else (*i)->Draw("e1 same");
-		tl2->AddEntry((*i),(*i)->GetName(),"p");
-	}
-	tl2->Draw();
+	plotdiffpT(types,pt_plots);
 }
 
 void plotter(){
 	std::vector<string> types;
-	//types.push_back("inclusive_mpioff");
-	//types.push_back("inclusive_mpion");
-	types.push_back("forced_mpioff");
-	types.push_back("forced_mpion");
+	types.push_back("inclusive_mpioff");
+	types.push_back("inclusive_mpion");
+	//types.push_back("forced_mpioff");
+	//types.push_back("forced_mpion");
 	TFile *thisFile = new TFile("hists.root","READ");
 	plotDPhi(thisFile,types);
 	plotpT(thisFile,types);
