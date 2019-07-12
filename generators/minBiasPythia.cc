@@ -40,6 +40,8 @@ int main (int argc, char *argv[]) {
 	pythia.readString ("Beams:eCM = 5020.");
 	pythia.readString("Random::setSeed = on");
 	pythia.readString("Random::seed =0");
+	//pythia.readString("PartonLevel:FSR=off");
+	//pythia.readString("PartonLevel:ISR=off");
 	pythia.readString("SoftQCD:nonDiffractive = on");
 	pythia.readString("SoftQCD:singleDiffractive = on");
 	pythia.readString("SoftQCD:doubleDiffractive = on");
@@ -76,7 +78,7 @@ int main (int argc, char *argv[]) {
 		for (int i = 0; i < pythia.event.size (); i++) {
 
 			//record track info
-			if (pythia.event[i].pT() >= 2 && pythia.event[i].isCharged() && pythia.event[i].isHadron()) {
+			if (pythia.event[i].pT() >= 2 && TMath::Abs(pythia.event[i].eta())<2.5&& !pythia.event[i].isLepton()) {
 				b_part_pt.push_back (pythia.event[i].pT ());
 				b_part_eta.push_back (pythia.event[i].eta ());
 				b_part_phi.push_back (pythia.event[i].phi ());

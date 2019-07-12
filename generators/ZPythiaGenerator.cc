@@ -59,20 +59,20 @@ int main (int argc, char *argv[]) {
 	pythia.readString ("Beams:eCM = 5020.");
 	pythia.readString("Random::setSeed = on");
 	pythia.readString("Random::seed =0");
-	pythia.readString("PartonLevel:FSR=off");
-	pythia.readString("PartonLevel:ISR=off");
+	pythia.readString("PartonLevel:FSR=on");
+	pythia.readString("PartonLevel:ISR=on");
 	pythia.readString("PartonLevel:MPI=off");
 	if (argc>=5)
 	{
-		if (argv[4][0]=='o')
+		if (argv[4][0]=='i')
 		{
-			pythia.readString("PartonLevel:ISR=on");
+			pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
+			pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
+			pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
+			pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
+			pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
 		}
 		if (argv[4][1]=='o')
-		{
-			pythia.readString("PartonLevel:FSR=on");
-		}
-		if (argv[4][2]=='o')
 		{
 			pythia.readString("PartonLevel:MPI=on");
 		}
@@ -82,14 +82,6 @@ int main (int argc, char *argv[]) {
 	pythia.readString("23:onIfAny = 11 13");
 
 	pythia.readString ("WeakZ0:gmZmode = 2"); // set to Z's
-	if (argc==4)
-	{
-		pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
-		pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
-		pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
-		pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
-		pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
-	}
 
 	pythia.readString ("WeakBosonAndParton:qqbar2gmZg = on");   // code 241
 	pythia.readString ("WeakBosonAndParton:qg2gmZq = on");      // code 242
@@ -256,7 +248,7 @@ int main (int argc, char *argv[]) {
 							if (pythia.event[j].isFinal()&&pythia.event[i].id () == -pythia.event[j].id ()) {
 								l2 = new TLorentzVector();
 								l2->SetPtEtaPhiM(pythia.event[j].pT (), pythia.event[j].eta (), pythia.event[j].phi (), pythia.event[j].m ());
-								if ((*l1+*l2).M () >40 )
+								if ((*l1+*l2).M () >40&& (*l1+*l2).Pt ()>25)
 								{
 									b_z_pt.push_back ((*l1+*l2).Pt ());
 									b_z_eta.push_back ((*l1+*l2).Eta ());
@@ -273,7 +265,7 @@ int main (int argc, char *argv[]) {
 					}
 				}
 				//record tracks
-				if (!pythia.event[i].isLepton())
+				else 
 				{
 					b_part_pt.push_back (pythia.event[i].pT ());
 					b_part_eta.push_back (pythia.event[i].eta ());

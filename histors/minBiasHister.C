@@ -25,7 +25,7 @@ void minBiasHister(){
 	gStyle->SetOptStat(0);
 	TFile* f = new TFile("../pythiadata/minbias.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
-	TFile *thisFile = new TFile("../plots/minbias_plots.root","RECREATE");
+	TFile *thisFile = new TFile("hists.root","UPDATE");
 
 	vector<float>* part_pt = nullptr, *part_eta = nullptr, *part_phi = nullptr;
 
@@ -43,14 +43,10 @@ void minBiasHister(){
 			production->Fill(part_pt->at(i));
 		}
 	}
-	//plot npart 
-	TCanvas* tc = new TCanvas();
-	tc->SetLogy();
-	tc->SetLogx();
+
 	production->Scale(1./t->GetEntries(),"width");
-	production->Scale(1/TMath::Pi());
-	production->Draw("e1");
-	tc->SaveAs("minbias_npart.pdf");
+	production->Scale(1./TMath::Pi());
+
 	thisFile->Write();
-	//thisFile->Close();
+	thisFile->Close();
 }

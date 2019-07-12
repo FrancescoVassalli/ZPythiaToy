@@ -34,15 +34,16 @@ namespace {
 
 void childTaggedHister(){
 	gStyle->SetOptStat(0);
-	TFile *thisFile = new TFile("hists.root","RECREATE");
+	TFile *thisFile = new TFile("hists.root","UPDATE");
 
-	string name = "../pythiadata/childTaggedHister";
+	string name = "../pythiadata/";
 	string extention = ".root";
 	std::vector<string> options;
-	options.push_back("fff");
-	options.push_back("ffo");
-	//options.push_back("fof");
-	//options.push_back("off");
+	options.push_back("inclusive_mpioff");
+	options.push_back("inclusive_mpion");
+	options.push_back("forced_mpioff");
+	options.push_back("forced_mpion");
+	
 
 	std::vector<TChain*> chains;
 
@@ -191,7 +192,9 @@ void childTaggedHister(){
 		{
 			(*i)->Scale(1./totalZ,"width");
 		}
-		double bins[3]={lowptRange.second-lowptRange.first,midptRange.second-midptRange.first,highptRange.second-highptRange.first};
+		bins[0]=lowptRange.second-lowptRange.first;
+		bins[1]=midptRange.second-midptRange.first;
+		bins[2]=highptRange.second-highptRange.first;
 		count=0;
 		for (std::vector<TH1F*>::iterator i = dphi_pt_plots.begin(); i != dphi_pt_plots.end(); ++i)
 		{
