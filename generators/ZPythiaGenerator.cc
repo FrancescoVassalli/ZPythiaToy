@@ -33,6 +33,26 @@ TLorentzVector* pToTLV(Vec4 in){
 	return out;
 }
 
+double InTwoPi (double phi) {
+		while (phi < 0 || 2*TMath::Pi() <= phi) {
+			if (phi < 0) phi += 2*TMath::Pi();
+			else phi -= 2*TMath::Pi();
+		}
+		return phi;
+	}
+
+	double DeltaPhi (double phi1, double phi2, const bool sign=0) {
+		phi1 = InTwoPi(phi1);
+		phi2 = InTwoPi(phi2);
+		double dphi = abs(phi1 - phi2);
+		while (dphi > TMath::Pi()) dphi = abs (dphi - 2*TMath::Pi());
+
+		if (sign && InTwoPi (phi2 + dphi) == phi1)
+			dphi *= -1;
+
+		return dphi;
+	}
+
 
 void tagChildren(Pythia8::Particle parent,std::set<int>* childIndexSet,Pythia* pythia){
 	childIndexSet->insert(parent.daughter1());
@@ -237,6 +257,7 @@ int main (int argc, char *argv[]) {
 
 			if (pythia.event[i].pT() >= 2 && pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta())<2.5) {
 				//reconstruct z
+
 				if (pythia.event[i].isLepton())
 				{
 					if (!l1)
