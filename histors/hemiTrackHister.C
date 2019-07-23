@@ -29,9 +29,9 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 
 void hemiTrackHister(){
 	gStyle->SetOptStat(0);
-	TFile* f = new TFile("../pythiadata/FranZOut15.root", "READ");
+	TFile* f = new TFile("../pythiadata/fff_inclusive.root", "READ");
 	TTree* t = (TTree*) f->Get("tree");
-	TFile *thisFile = new TFile("../plots/zplots.root","RECREATE");
+	//TFile *thisFile = new TFile("../plots/zplots.root","RECREATE");
 
 	int code;
 	int id1;
@@ -98,7 +98,7 @@ void hemiTrackHister(){
 	unsigned count=0;
 	short colors[3]={kBlack,kRed,kBlue};
 	double bins[3]={2/TMath::Pi(),16./(3*TMath::Pi()),16./TMath::Pi()};
-	TLegend* tl = new TLegend(.2,.1,.4,.4);
+	TLegend* tl = new TLegend(.7,.7,.9,.9);
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
 		(*i)->Scale(1./totalZ,"width");
@@ -110,7 +110,8 @@ void hemiTrackHister(){
 		tl->AddEntry((*i),(*i)->GetName(),"l");
 	}
 	tl->Draw();
+	tc->SaveAs("../plots/fff_inclusive_npart.pdf");
 	cout<<"hemi momentum diff: "<<ntrack_plots[2]->Integral()+ntrack_plots[1]->Integral()-ntrack_plots[0]->Integral()<<'\n';
-	thisFile->Write();
+	//thisFile->Write();
 	//thisFile->Close();
 }

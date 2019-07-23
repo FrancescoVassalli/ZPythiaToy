@@ -79,8 +79,8 @@ int main (int argc, char *argv[]) {
 	pythia.readString ("Beams:eCM = 5020.");
 	pythia.readString("Random::setSeed = on");
 	pythia.readString("Random::seed =0");
-	pythia.readString("PartonLevel:FSR=on");
-	pythia.readString("PartonLevel:ISR=on");
+	pythia.readString("PartonLevel:FSR=off");
+	pythia.readString("PartonLevel:ISR=off");
 	pythia.readString("PartonLevel:MPI=off");
 	if (argc>=5)
 	{
@@ -292,13 +292,13 @@ int main (int argc, char *argv[]) {
 					b_part_eta.push_back (pythia.event[i].eta ());
 					b_part_phi.push_back (pythia.event[i].phi ());
 					b_part_child.push_back(partonChildIndicies.count(i));
+					b_part_n++;
 				}
 				
 				if (partonChildIndicies.count(i))
 				{
 					tempChildCount++;
 				}
-				b_part_n++;
 			}
 			/*record the info for the final Z using event record
 			if (pythia.event[i].pT()>=25&& abs(pythia.event[i].id ()) == 23 
