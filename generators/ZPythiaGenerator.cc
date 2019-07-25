@@ -53,6 +53,15 @@ double InTwoPi (double phi) {
 		return dphi;
 	}
 
+/**
+ * Returns dR between two eta, phi coordinates.
+ */
+double DeltaR (const double eta1, const double eta2, const double phi1, const double phi2 ) {
+ const double deta = eta1 - eta2;
+ const double dphi = DeltaPhi (phi1, phi2, false);
+ return sqrt( pow( deta, 2 ) + pow( dphi, 2 ) );
+}
+
 
 void tagChildren(Pythia8::Particle parent,std::set<int>* childIndexSet,Pythia* pythia){
 	childIndexSet->insert(parent.daughter1());
@@ -80,8 +89,8 @@ int main (int argc, char *argv[]) {
 	pythia.readString("Random::setSeed = on");
 	pythia.readString("Random::seed =0");
 	pythia.readString("PartonLevel:FSR=off");
-	pythia.readString("PartonLevel:ISR=off");
-	pythia.readString("PartonLevel:MPI=off");
+	pythia.readString("PartonLevel:ISR=on");
+	pythia.readString("PartonLevel:MPI=on");
 	if (argc>=5)
 	{
 		if (argv[4][0]=='i')
@@ -112,7 +121,7 @@ int main (int argc, char *argv[]) {
 
 	pythia.init ();
 
-	//  SlowJet *antikT04 = new SlowJet (-1, 0.4, 1, 5, 2, 1);
+	SlowJet *antikT04 = new SlowJet (-1, 0.4, 1, 5, 2, 1);
 	//  SlowJet *antikT10 = new SlowJet (-1, 1.0, 1, 5, 2, 1);
 
 	int NEVT = atoi (argv[2]);
@@ -128,13 +137,15 @@ int main (int argc, char *argv[]) {
 	bool b_isValence1;
 	bool b_isValence2;
 
-	int b_z_n, b_part_n;
+	int b_z_n, b_part_n, b_lead_n, b_sublead_n;
 	vector<float> b_z_pt, b_z_eta, b_z_phi, b_z_m;
+	vector<float> b_l_pt, b_l_eta, b_l_phi, b_l_m;
 	vector<float> b_part_pt, b_part_eta, b_part_phi;
 	std::vector<bool> b_part_child;
+	float b_lead_pt, b_lead_eta, b_lead_phi;
+	float b_sublead_pt, b_sublead_eta, b_sublead_phi;
 	vector<float> b_jet_r04_pt, b_jet_r04_eta, b_jet_r04_phi, b_jet_r04_e;
-	vector<float> b_jet_r10_pt, b_jet_r10_eta, b_jet_r10_phi, b_jet_r10_e;
-	vector<float> b_l_pt, b_l_eta, b_l_phi, b_l_m;
+	//vector<float> b_jet_r10_pt, b_jet_r10_eta, b_jet_r10_phi, b_jet_r10_e;
 
 	TTree *t = new TTree("tree","a volumptous pineapple tree");
 
@@ -157,18 +168,27 @@ int main (int argc, char *argv[]) {
 	t->Branch ("part_phi", &b_part_phi);
 	t->Branch ("part_child", &b_part_child);
 
+	t->Branch ("lead_n",   &b_lead_n);
+	t->Branch ("lead_pt",  &b_lead_pt);
+	t->Branch ("lead_eta", &b_lead_eta);
+	t->Branch ("lead_phi", &b_lead_phi);
+
+	t->Branch ("sublead_n",   &b_sublead_n);
+	t->Branch ("sublead_pt",  &b_sublead_pt);
+	t->Branch ("sublead_eta", &b_sublead_eta);
+	t->Branch ("sublead_phi", &b_sublead_phi);
 	/* t->Branch ("l_pt",  &b_l_pt);
 		 t->Branch ("l_eta", &b_l_eta);
 		 t->Branch ("l_phi", &b_l_phi);
-		 t->Branch ("l_m",   &b_l_m);
+		 t->Branch ("l_m",   &b_l_m);*/
 
-		 t->Branch ("jet_r04_n",   &b_jet_r04_n);
-		 t->Branch ("jet_r04_pt",  &b_jet_r04_pt);
-		 t->Branch ("jet_r04_eta", &b_jet_r04_eta);
-		 t->Branch ("jet_r04_phi", &b_jet_r04_phi);
-		 t->Branch ("jet_r04_e",   &b_jet_r04_e);
+	//t->Branch ("jet_r04_n",   &b_jet_r04_n);
+	t->Branch ("jet_r04_pt",  &b_jet_r04_pt);
+	t->Branch ("jet_r04_eta", &b_jet_r04_eta);
+	t->Branch ("jet_r04_phi", &b_jet_r04_phi);
+	t->Branch ("jet_r04_e",   &b_jet_r04_e);
 
-		 t->Branch ("jet_r10_n",   &b_jet_r10_n);
+		 /*t->Branch ("jet_r10_n",   &b_jet_r10_n);
 		 t->Branch ("jet_r10_pt",  &b_jet_r10_pt);
 		 t->Branch ("jet_r10_eta", &b_jet_r10_eta);
 		 t->Branch ("jet_r10_phi", &b_jet_r10_phi);
@@ -184,7 +204,6 @@ int main (int argc, char *argv[]) {
 			continue;
 		clock_t endPythia = clock();
 		pythiaTimeInSeconds+=(endPythia-startPythia) / (double) CLOCKS_PER_SEC;
-
 
 		b_z_n = 0;
 		b_z_pt.clear ();
@@ -233,31 +252,8 @@ int main (int argc, char *argv[]) {
 		unsigned tempChildCount = 0;
 		TLorentzVector *l1=nullptr,*l2=nullptr;
 		for (int i = 0; i < pythia.event.size (); i++) {
-
-
-			//l1.SetPtEtaPhiM (pythia.event[i].pT (), pythia.event[i].eta (), pythia.event[i].phi (), pythia.event[i].m ());
-
-			//for (int j = 0; j < i; j++) {
-
-			//  if (!pythia.event[j].isFinal()) continue; // check if in final state
-
-			//  if (pythia.event[i].id () != -pythia.event[j].id ()) continue; // check if anti-particle of first particle
-
-			//  l2.SetPtEtaPhiM (pythia.event[j].pT (), pythia.event[j].eta (), pythia.event[j].phi (), pythia.event[j].m ());
-
-			//  if ((l1+l2).M () < 40) continue; // loose invariant mass cut to make sure these are from Z decays
-
-			//  // reconstruct Z
-			//  b_z_pt.push_back ((l1+l2).Pt ());
-			//  b_z_eta.push_back ((l1+l2).Eta ());
-			//  b_z_phi.push_back ((l1+l2).Phi ());
-			//  b_z_m.push_back ((l1+l2).M ());
-			//  b_z_n++;
-			//}
-
 			if (pythia.event[i].pT() >= 2 && pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta())<2.5) {
 				//reconstruct z
-
 				if (pythia.event[i].isLepton())
 				{
 					if (!l1)
@@ -269,13 +265,19 @@ int main (int argc, char *argv[]) {
 							if (pythia.event[j].isFinal()&&pythia.event[i].id () == -pythia.event[j].id ()) {
 								l2 = new TLorentzVector();
 								l2->SetPtEtaPhiM(pythia.event[j].pT (), pythia.event[j].eta (), pythia.event[j].phi (), pythia.event[j].m ());
-								if ((*l1+*l2).M () >40&& (*l1+*l2).Pt ()>25)
+								if ((*l1+*l2).M () >40&& (*l1+*l2).Pt ()>10)
 								{
 									b_z_pt.push_back ((*l1+*l2).Pt ());
 									b_z_eta.push_back ((*l1+*l2).Eta ());
 									b_z_phi.push_back ((*l1+*l2).Phi ());
 									b_z_m.push_back ((*l1+*l2).M ());
 									b_z_n++;
+									b_l_pt.push_back(l1->Pt());
+									b_l_pt.push_back(l2->Pt());
+									b_l_eta.push_back(l1->Eta());
+									b_l_eta.push_back(l2->Eta());
+									b_l_phi.push_back(l1->Phi());
+									b_l_phi.push_back(l2->Phi());
 								}
 								delete l2;
 								l2 = nullptr;
@@ -325,8 +327,55 @@ int main (int argc, char *argv[]) {
 			totalGluon++;
 		}
 
-		//antikT04->analyze (pythia.event);
+		antikT04->analyze (pythia.event);
 		//antikT10->analyze (pythia.event);
+		b_lead_pt = -1.;
+		b_sublead_pt=-1.;
+		b_jet_r04_eta.clear();
+		b_jet_r04_pt.clear();
+		b_jet_r04_phi.clear();
+		for (int i = 0; i < antikT04->sizeJet (); i++) {
+			bool matchesLepton = false;
+			for (int j = 0; !matchesLepton && j < b_l_eta.size(); j++) {
+				matchesLepton = DeltaR (antikT04->p (i).eta (), b_l_eta.at (j), antikT04->phi (i), b_l_phi.at (j)) < 0.2;
+			}
+			if (matchesLepton) continue;
+
+			b_jet_r04_pt.push_back( antikT04->pT (i));
+			b_jet_r04_eta.push_back( antikT04->p (i).eta ());
+			b_jet_r04_phi.push_back( antikT04->phi (i));
+
+			if (b_lead_pt<0)
+			{
+				b_lead_pt = antikT04->pT (i);
+				b_lead_eta = antikT04->p (i).eta ();
+				b_lead_phi = antikT04->phi (i);
+				b_lead_n = antikT04->constituents(i).size();
+			}
+			else if(antikT04->pT (i)>b_sublead_pt){
+				b_sublead_pt = antikT04->pT (i);
+				b_sublead_eta = antikT04->p (i).eta ();
+				b_sublead_phi = antikT04->phi (i);
+				b_sublead_n = antikT04->constituents(i).size();
+			}
+		}
+		if (b_sublead_pt>b_lead_pt)
+		{
+			float pTtemp, etaTemp, phiTemp;
+			int nTemp;
+			pTtemp= b_sublead_pt;
+			etaTemp = b_sublead_eta;
+			phiTemp = b_sublead_phi;
+			nTemp = b_sublead_n;
+			b_sublead_n = b_lead_n;
+			b_sublead_pt = b_lead_pt;
+			b_sublead_phi = b_lead_phi;
+			b_sublead_eta = b_lead_eta;
+			b_lead_eta = etaTemp;
+			b_lead_phi = phiTemp;
+			b_lead_pt = pTtemp;
+			b_lead_n = nTemp;
+		}
 
 		b_code = pythia.info.code ();
 		b_id1 = pythia.info.id1pdf ();
@@ -339,12 +388,7 @@ int main (int argc, char *argv[]) {
 		b_isValence2 = pythia.info.isValence2 ();
 		t->Fill();
 
-		/*b_l_n = 0;
-			b_l_pt.clear ();
-			b_l_eta.clear ();
-			b_l_phi.clear ();
-			b_l_m.clear ();
-
+		/*
 			for (int i = 0; i < pythia.event.size (); i++) {
 
 			if (!pythia.event[i].isFinal()) continue; // check if in final state

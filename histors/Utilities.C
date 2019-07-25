@@ -160,7 +160,7 @@ double InTwoPi (double phi) {
  * Returns the difference between two angles in 0 to pi.
  * If sign is true, will return a signed version such that phi2 = phi1 + dphi
  */
-double DeltaPhi (double phi1, double phi2, const bool sign) {
+double DeltaPhi (double phi1, double phi2, const bool sign=false) {
   phi1 = InTwoPi(phi1);
   phi2 = InTwoPi(phi2);
   double dphi = abs(phi1 - phi2);

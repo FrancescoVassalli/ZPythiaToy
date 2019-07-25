@@ -103,7 +103,7 @@ void hemiTrackHister(){
 	{
 		(*i)->Scale(1./totalZ,"width");
 		(*i)->Scale(bins[count]);
-		(*i)->GetYaxis()->SetRangeUser(10e-7,10e1);
+		(*i)->GetYaxis()->SetRangeUser(10e-8,10e1);
 		(*i)->SetLineColor(colors[count]);
 		if (count++==0)(*i)->Draw("e1");
 		else (*i)->Draw("e1 same");

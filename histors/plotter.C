@@ -1,4 +1,222 @@
 
+void myText(Double_t x,Double_t y,Color_t color, const char *text, Double_t tsize) {
+	TLatex l; //l.SetTextAlign(12); 
+	l.SetTextSize(tsize); 
+	l.SetNDC();
+	l.SetTextColor(color);
+	l.DrawLatex(x,y,text);
+}
+
+void plotJetnPart(TFile* thisFile){
+	std::vector<TH1F*> ntrack_plots;
+	ntrack_plots.push_back((TH1F*) thisFile->Get("near_lead"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("medium_lead"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("away_lead"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("near_sub"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("medium_sub"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("away_sub"));
+
+	unsigned typeCount=0;
+	short colors[3]={kBlack,kRed,kBlue};
+	short styleTypes[6]={kFullCircle,kFullTriangleUp,kFullStar,kOpenCircle,kOpenTriangleUp,kOpenStar};
+	string titles[3]={"nTracks for jet in Z going #Delta#phi#in[0,#frac{#pi}{2}]",
+		"nTracks for jet in hemisphere #Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]",
+		"nTracks for jet in away from Z #Delta#phi#in[#frac{15#pi}{16},#pi]"};
+	for (int i = 0; i < 3; ++i)
+	{
+		TCanvas* tc = new TCanvas();
+		tc->SetLogy();
+		tc->SetTicky();
+		TLegend* tl = new TLegend(.7,.7,.9,.9);
+		ntrack_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		ntrack_plots[i]->SetXTitle("pT [GeV/c]");
+		ntrack_plots[i]->SetLineColor(colors[i]);
+		ntrack_plots[i]->SetMarkerColor(colors[i]);
+		ntrack_plots[i]->SetMarkerStyle(styleTypes[i]);
+		ntrack_plots[i+3]->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		ntrack_plots[i+3]->SetXTitle("pT [GeV/c]");
+		ntrack_plots[i+3]->SetLineColor(colors[i]);
+		ntrack_plots[i+3]->SetMarkerColor(colors[i]);
+		ntrack_plots[i+3]->SetMarkerStyle(styleTypes[i+3]);
+		ntrack_plots[i]->Draw("e1");
+		ntrack_plots[i+3]->Draw("e1 same");
+		tl->AddEntry(ntrack_plots[i],"leading jet","p");
+		tl->AddEntry(ntrack_plots[i+3],"non-leading jet","p");
+		tl->Draw();
+		myText(.4,.6,colors[i],titles[i].c_str(),.04);
+		string savename = "../plots/Zjet_ntrack_dphi_";
+		savename+=ntrack_plots[i]->GetName();
+		savename+=".pdf";
+		tc->SaveAs(savename.c_str());	
+	}
+}
+
+void plotJetnPart2(TFile* thisFile){
+	std::vector<TH1F*> ntrack_plots;
+	ntrack_plots.push_back((TH1F*) thisFile->Get("near_lead"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("medium_lead"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("away_lead"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("near_sub"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("medium_sub"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("away_sub"));
+
+	unsigned typeCount=0;
+	short colors[3]={kBlack,kRed,kBlue};
+	short styleTypes[6]={kFullCircle,kFullTriangleUp,kFullStar,kOpenCircle,kOpenTriangleUp,kOpenStar};
+	string titles[2]={"nTracks for leading jet",
+		"nTracks not in leading jet"};
+	string saves[2]={"leading","nonleading"};
+
+	for (int i = 0; i < 2; ++i)
+	{
+		TCanvas* tc = new TCanvas();
+		tc->SetLogy();
+		tc->SetTicky();
+		TLegend* tl = new TLegend(.7,.7,.9,.9);
+		ntrack_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		ntrack_plots[i]->SetXTitle("pT");
+		ntrack_plots[i]->SetLineColor(colors[0]);
+		ntrack_plots[i]->SetMarkerColor(colors[0]);
+		ntrack_plots[i]->SetMarkerStyle(styleTypes[0]);
+		ntrack_plots[i+1]->SetLineColor(colors[1]);
+		ntrack_plots[i+1]->SetMarkerColor(colors[1]);
+		ntrack_plots[i+1]->SetMarkerStyle(styleTypes[1]);
+		ntrack_plots[i+2]->SetLineColor(colors[2]);
+		ntrack_plots[i+2]->SetMarkerColor(colors[2]);
+		ntrack_plots[i+2]->SetMarkerStyle(styleTypes[2]);
+		ntrack_plots[i]->Draw("e1");
+		ntrack_plots[i+1]->Draw("e1 same");
+		ntrack_plots[i+2]->Draw("e1 same");
+		tl->AddEntry(ntrack_plots[i],"Z-track #Delta#phi#in[0,#frac{#pi}{2}]","p");
+		tl->AddEntry(ntrack_plots[i+1],"Z-track #Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","p");
+		tl->AddEntry(ntrack_plots[i+2],"Z-track #Delta#phi#in[#frac{15#pi}{16},#pi]","p");
+		tl->Draw();
+		myText(.4,.6,kBlack,titles[i].c_str(),.04);
+		tc->SaveAs(saves[i].c_str());	
+	}
+}
+
+void plotJetDPhiTracks(TFile* thisFile){
+	std::vector<TH1F*> dphi_plots;
+	dphi_plots.push_back((TH1F*) thisFile->Get("10-20"));
+	dphi_plots.push_back((TH1F*) thisFile->Get("20-40"));
+	dphi_plots.push_back((TH1F*) thisFile->Get("40-80"));
+	dphi_plots.push_back((TH1F*) thisFile->Get("80+"));
+
+	short colors[4]={kRed,kBlue,kGreen+3,kMagenta-5};
+	TCanvas* tc = new TCanvas();
+	tc->Draw();
+	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
+	for (int i = 0; i < 4; ++i)
+	{
+		dphi_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi *N_{Z}}");
+		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
+		dphi_plots[i]->SetLineColor(colors[i]);
+		dphi_plots[i]->GetYaxis()->SetRangeUser(0,14);
+		if(i==0) dphi_plots[i]->Draw("");
+		else dphi_plots[i]->Draw("same");
+		string name  = dphi_plots[i]->GetName();
+		name+="p_{T}^{Z} [GeV]";
+		myText(.2,.6+.05*i,colors[i],name.c_str(),.04);
+	}
+	tl->Draw();
+	tc->SaveAs("../plots/Zjet_ntrack_dphi.pdf");	
+}
+
+void plotJetDPhiTracksWide(TFile* thisFile,string zType){
+	std::vector<TH1F*> dphi_plots;
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 2-3.3 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 3.3-5.4 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 5.4-8.9 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 8.9-14.6 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 14.6-24.0 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 24.0-39.5 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 39.5-65 p_{T}").c_str()));
+	
+	short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
+	TCanvas* tc = new TCanvas();
+	tc->Draw();
+	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
+	for (int i = 0; i < dphi_plots.size(); ++i)
+	{
+		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi dp_{T}}");
+		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
+		dphi_plots[i]->SetLineColor(colors[i]);
+		dphi_plots[i]->GetYaxis()->SetRangeUser(0,6);
+		if(i==0) dphi_plots[i]->Draw("");
+		else dphi_plots[i]->Draw("same");
+		string label = dphi_plots[i]->GetName();
+		myText(.2,.5+.05*i,colors[i],label.substr(zType.size()+10).c_str(),.04);
+	}
+	tl->Draw();
+	string savename = "../plots/";
+	savename += zType+"_trackpT_dphi.pdf";
+	tc->SaveAs(savename.c_str());
+}
+
+void plottest(TFile *thisFile){
+	TH1F *test = (TH1F*) thisFile->Get("non-lead 2-3.3 p_{T}");
+	TCanvas* tc = new TCanvas();
+	tc->Draw();
+	test->Draw("e1");
+}
+
+void plotdPhiLead(TFile *thisFile,string jetType){
+	std::vector<TH1F*> dphi_plots;
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 2-3.3 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 3.3-5.4 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 5.4-8.9 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 8.9-14.6 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 14.6-24.0 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 24.0-39.5 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 39.5-65 p_{T}").c_str()));
+	
+	short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
+	TCanvas* tc = new TCanvas();
+	tc->Draw();
+	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
+	for (int i = 0; i < dphi_plots.size(); ++i)
+	{
+		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z}d#Delta#phi dp_{T}}");
+		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
+		dphi_plots[i]->SetLineColor(colors[i]);
+		//dphi_plots[i]->GetYaxis()->SetRangeUser(0,8);
+		if(i==0) dphi_plots[i]->Draw("");
+		else dphi_plots[i]->Draw("same");
+		string label = dphi_plots[i]->GetName();
+		myText(.2,.5+.05*i,colors[i],label.substr(jetType.size()).c_str(),.04);
+	}
+	tl->Draw();
+	string savename = "../plots/";
+	savename += jetType+"_trackpT_dphi.pdf";
+	tc->SaveAs(savename.c_str());
+}
+
+void plotJetDPhi(TFile* thisFile){
+	std::vector<TH1F*> dphi_plots;
+	dphi_plots.push_back((TH1F*) thisFile->Get("10-20 jets"));
+	dphi_plots.push_back((TH1F*) thisFile->Get("20-40 jets"));
+	dphi_plots.push_back((TH1F*) thisFile->Get("40-80 jets"));
+	dphi_plots.push_back((TH1F*) thisFile->Get("80+ jets"));
+
+	short colors[4]={kRed,kBlue,kGreen+3,kMagenta-5};
+	TCanvas* tc = new TCanvas();
+	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
+	for (int i = 0; i < 4; ++i)
+	{
+		dphi_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi *N_{Z}}");
+		dphi_plots[i]->SetXTitle("Z-jet #Delta#phi");
+		dphi_plots[i]->GetYaxis()->SetRangeUser(0,2.5);
+		dphi_plots[i]->SetLineColor(colors[i]);
+		if(i==0) dphi_plots[i]->Draw("");
+		else dphi_plots[i]->Draw("same");
+		string name  = dphi_plots[i]->GetName();
+		name+="p_{T}^{Z} [GeV]";
+		tl->AddEntry(dphi_plots[i],name.c_str(),"l");
+	}
+	tl->Draw();
+	tc->SaveAs("../plots/Zjet_njet_dphi.pdf");	
+}
 
 void plotDPhi(TFile* thisFile,std::vector<string> types){
 	std::vector<TH1F*> dphi_pt_plots;
@@ -190,14 +408,23 @@ void child_pT(TFile* thisFile, std::vector<string> types){
 }
 
 void plotter(){
-	std::vector<string> types;
-	types.push_back("inclusive_mpioff");
-	types.push_back("inclusive_mpion");
+	//std::vector<string> types;
+	//types.push_back("inclusive_mpioff");
+	//types.push_back("inclusive_mpion");
 	//types.push_back("forced_mpioff");
 	//types.push_back("forced_mpion");
 	TFile *thisFile = new TFile("hists.root","READ");
 	//plotDPhi(thisFile,types);
 	//plotpT(thisFile,types);
 	//child_dphi(thisFile,types);
-	child_pT(thisFile,types);
+	//child_pT(thisFile,types);
+	//plotJetnPart(thisFile);
+	//plotJetnPart2(thisFile);
+	//plotJetDPhiTracks(thisFile);
+	//plotJetDPhi(thisFile);
+	plotJetDPhiTracksWide(thisFile,"15-25");
+	plotJetDPhiTracksWide(thisFile,"25+");
+	plotdPhiLead(thisFile,"leading");
+	plotdPhiLead(thisFile,"non-lead");
+	plottest(thisFile);
 }
