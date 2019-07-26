@@ -109,7 +109,7 @@ void plotJetDPhiTracks(TFile* thisFile){
 	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < 4; ++i)
 	{
-		dphi_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi *N_{Z}}");
+		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi}");
 		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
 		dphi_plots[i]->SetLineColor(colors[i]);
 		dphi_plots[i]->GetYaxis()->SetRangeUser(0,14);
@@ -180,6 +180,8 @@ void plotdPhiLead(TFile *thisFile,string jetType){
 		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z}d#Delta#phi dp_{T}}");
 		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
 		dphi_plots[i]->SetLineColor(colors[i]);
+		dphi_plots[i]->SetMarkerStyle(kFullCircle);
+		dphi_plots[i]->SetMarkerColor(colors[i]);
 		//dphi_plots[i]->GetYaxis()->SetRangeUser(0,8);
 		if(i==0) dphi_plots[i]->Draw("");
 		else dphi_plots[i]->Draw("same");
@@ -204,10 +206,12 @@ void plotJetDPhi(TFile* thisFile){
 	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < 4; ++i)
 	{
-		dphi_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi *N_{Z}}");
+		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi}");
 		dphi_plots[i]->SetXTitle("Z-jet #Delta#phi");
 		dphi_plots[i]->GetYaxis()->SetRangeUser(0,2.5);
 		dphi_plots[i]->SetLineColor(colors[i]);
+		dphi_plots[i]->SetMarkerStyle(kFullCircle);
+		dphi_plots[i]->SetMarkerColor(colors[i]);
 		if(i==0) dphi_plots[i]->Draw("");
 		else dphi_plots[i]->Draw("same");
 		string name  = dphi_plots[i]->GetName();
@@ -215,7 +219,7 @@ void plotJetDPhi(TFile* thisFile){
 		tl->AddEntry(dphi_plots[i],name.c_str(),"l");
 	}
 	tl->Draw();
-	tc->SaveAs("../plots/Zjet_njet_dphi.pdf");	
+	tc->SaveAs("../plots/Zjet_njet_dphi.pdf");
 }
 
 void plotDPhi(TFile* thisFile,std::vector<string> types){
@@ -420,11 +424,11 @@ void plotter(){
 	//child_pT(thisFile,types);
 	//plotJetnPart(thisFile);
 	//plotJetnPart2(thisFile);
-	//plotJetDPhiTracks(thisFile);
-	//plotJetDPhi(thisFile);
-	plotJetDPhiTracksWide(thisFile,"15-25");
-	plotJetDPhiTracksWide(thisFile,"25+");
+	plotJetDPhiTracks(thisFile);
+	plotJetDPhi(thisFile);
+	//plotJetDPhiTracksWide(thisFile,"15-25");
+	//plotJetDPhiTracksWide(thisFile,"25+");
 	plotdPhiLead(thisFile,"leading");
 	plotdPhiLead(thisFile,"non-lead");
-	plottest(thisFile);
+	//plottest(thisFile);
 }

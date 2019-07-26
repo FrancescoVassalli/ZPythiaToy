@@ -14,6 +14,8 @@ void jetZHister(){
 	TChain* t= new TChain("tree");
 	t->Add("../pythiadata/jet_mpi_inclusive1.root");
 	t->Add("../pythiadata/jet_mpi_inclusive2.root");
+	t->Add("../pythiadata/jet_mpi_inclusive3.root");
+	t->Add("../pythiadata/jet_mpi_inclusive4.root");
 	TFile *thisFile = new TFile("hists.root","UPDATE");
 
 	int code;
@@ -165,7 +167,7 @@ void jetZHister(){
 						ntrack_plots[5]->Fill(part_pt->at(i));
 					}
 				}
-				if (z_pt->at(0)>25)
+				if (z_pt->at(0)<25&&z_pt->at(0)>15)
 				{
 					if(!leadZcounted){
 						leadZs++;
