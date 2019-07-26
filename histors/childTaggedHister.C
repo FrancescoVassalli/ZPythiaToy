@@ -17,18 +17,6 @@ namespace {
 		}
 		return phi;
 	}
-
-	double DeltaPhi (double phi1, double phi2, const bool sign=0) {
-		phi1 = InTwoPi(phi1);
-		phi2 = InTwoPi(phi2);
-		double dphi = abs(phi1 - phi2);
-		while (dphi > TMath::Pi()) dphi = abs (dphi - 2*TMath::Pi());
-
-		if (sign && InTwoPi (phi2 + dphi) == phi1)
-			dphi *= -1;
-
-		return dphi;
-	}
 	unsigned plotcount=0;
 }
 
