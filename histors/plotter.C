@@ -1,4 +1,4 @@
-#include "Utilities.C"
+#include "Utilities.h"
 using namespace atlashi;
 void plotJetnPart(TFile* thisFile,string jetpTSelection){
 	std::vector<TH1F*> ntrack_plots;
@@ -205,19 +205,37 @@ void plotdPhiLead(TFile *thisFile,string jetType){
 		dphi_plots[i]->SetMarkerStyle(kFullCircle);
 		dphi_plots[i]->SetMarkerColor(colors[i]);
 		//dphi_plots[i]->GetYaxis()->SetRangeUser(0,8);
-    if (jetType == "leading")
+
+    if (jetType == "15<p_{Z}^{T}<25_leading")
       dphi_plots[i]->GetYaxis ()->SetRangeUser (0, 4);
-    else if (jetType == "non-lead")
+    else if (jetType == "15<p_{Z}^{T}<25_non-lead")
       dphi_plots[i]->GetYaxis ()->SetRangeUser (0, 1);
+    else if (jetType == "p_{Z}^{T}>25_leading")
+      dphi_plots[i]->GetYaxis ()->SetRangeUser (0, 4);
+    else if (jetType == "p_{Z}^{T}>25_non-lead")
+      dphi_plots[i]->GetYaxis ()->SetRangeUser (0, 1);
+
 		if(i==0) dphi_plots[i]->Draw("");
 		else dphi_plots[i]->Draw("same");
 		myText(.2,.9-.05*i,colors[i],dphi_plot_labels[i].c_str (),.04);
 	}
 	//tl->Draw();
-  if (jetType == "leading")
+  if (jetType == "15<p_{Z}^{T}<25_leading") {
     myText (.55, 0.88, kBlack, "Tracks assoc. with lead. jet", 0.04);
-  else if (jetType == "non-lead")
+    myText (0.55, 0.82, kBlack, "15 < #it{p}_{T}^{Z} < 25 GeV", 0.04);
+  }
+  else if (jetType == "15<p_{Z}^{T}<25_non-lead") {
     myText (.55, 0.88, kBlack, "Tracks not assoc. with lead. jet", 0.04);
+    myText (0.55, 0.82, kBlack, "15 < #it{p}_{T}^{Z} < 25 GeV", 0.04);
+  }
+  else if (jetType == "p_{Z}^{T}>25_leading") {
+    myText (.55, 0.88, kBlack, "Tracks assoc. with lead. jet", 0.04);
+    myText (0.55, 0.82, kBlack, "#it{p}_{T}^{Z} > 25 GeV", 0.04);
+  }
+  else if (jetType == "p_{Z}^{T}>25_non-lead") {
+    myText (.55, 0.88, kBlack, "Tracks not assoc. with lead. jet", 0.04);
+    myText (0.55, 0.82, kBlack, "#it{p}_{T}^{Z} > 25 GeV", 0.04);
+  }
 	string savename = "../plots/";
 	savename += jetType+"_trackpT_dphi.pdf";
 	tc->SaveAs(savename.c_str());
@@ -453,14 +471,13 @@ void plotter(){
 	//plotpT(thisFile,types);
 	//child_dphi(thisFile,types);
 	//child_pT(thisFile,types);
-	plotJetnPart(thisFile,"p_{Z}^{T}>25");
 	plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
-	//plotJetnPart2(thisFile);
-	//plotJetDPhiTracks(thisFile);
-	//plotJetDPhi(thisFile);
+	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
+
 	//plotJetDPhiTracksWide(thisFile,"15-25");
 	//plotJetDPhiTracksWide(thisFile,"25+");
-	//plotdPhiLead(thisFile,"leading");
-	//plotdPhiLead(thisFile,"non-lead");
-	//plottest(thisFile);
+
+	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_leading");
+	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_non-lead");
+
 }
