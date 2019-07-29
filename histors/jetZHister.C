@@ -77,26 +77,26 @@ void jetZHister(){
 	dphi_plots.push_back(new TH1F("80+","",100,0,  2*TMath::Pi()));
 
 	std::vector<TH1F*> dphi_jet_plots;
-	dphi_jet_plots.push_back(new TH1F("10-20 jets","",20,0,2*TMath::Pi()));
-	dphi_jet_plots.push_back(new TH1F("20-40 jets","",20,0,2*TMath::Pi()));
-	dphi_jet_plots.push_back(new TH1F("40-80 jets","",20,0,2*TMath::Pi()));
-	dphi_jet_plots.push_back(new TH1F("80+ jets","",20,0,  2*TMath::Pi()));
+	dphi_jet_plots.push_back(new TH1F("10-20_jets","",20,0,2*TMath::Pi()));
+	dphi_jet_plots.push_back(new TH1F("20-40_jets","",20,0,2*TMath::Pi()));
+	dphi_jet_plots.push_back(new TH1F("40-80_jets","",20,0,2*TMath::Pi()));
+	dphi_jet_plots.push_back(new TH1F("80+_jets","",20,0,  2*TMath::Pi()));
 
 	std::vector<TH1F*> dphi_lead_plots;
-	dphi_lead_plots.push_back(new TH1F("leading 2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("leading 3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("leading 5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("leading 8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("leading 14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("leading 24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("leading 39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 2-3.3 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 3.3-5.4 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 5.4-8.9 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 8.9-14.6 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 14.6-24.0 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 24.0-39.5 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("non-lead 39.5-65 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("leading_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_2-3.3 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_3.3-5.4 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_5.4-8.9 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_8.9-14.6 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_14.6-24.0 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_24.0-39.5 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("non-lead_39.5-65 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
 
 	for (unsigned i =0; i<14; i++)
 	{
