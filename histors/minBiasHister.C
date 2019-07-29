@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include "Utilities.C"
+#include "Utilities.h"
 
 using namespace std;
 using namespace atlashi;
