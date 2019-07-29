@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <Utilities.h>
+
 using namespace std;
 
 double InTwoPi (double phi) {
@@ -29,7 +31,17 @@ double DeltaPhi (double phi1, double phi2, const bool sign=0) {
 
 void hemiTrackHister(){
 	gStyle->SetOptStat(0);
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	TFile* f = new TFile("../pythiadata/fff_inclusive.root", "READ");
+=======
+	//TFile* f = new TFile("../pythiadata/FranZOut15.root", "READ");
+	TFile* f = new TFile("../pythiadata/test_pthat2.root", "READ");
+>>>>>>> Stashed changes
+=======
+	//TFile* f = new TFile("../pythiadata/FranZOut15.root", "READ");
+	TFile* f = new TFile("../pythiadata/test_pthat2.root", "READ");
+>>>>>>> Stashed changes
 	TTree* t = (TTree*) f->Get("tree");
 	//TFile *thisFile = new TFile("../plots/zplots.root","RECREATE");
 
@@ -65,9 +77,10 @@ void hemiTrackHister(){
 	t->SetBranchAddress ("part_phi",  &part_phi);
 
 	std::vector<TH1F*> ntrack_plots;
-	ntrack_plots.push_back(new TH1F("central","",7,0,45));
-	ntrack_plots.push_back(new TH1F("medium","",7,0,45));
-	ntrack_plots.push_back(new TH1F("outer","",7,0,45));
+  double* ptarr = atlashi::logspace (2, 65, 6);
+	ntrack_plots.push_back(new TH1F("central","",6,ptarr));
+	ntrack_plots.push_back(new TH1F("medium","",6,ptarr));
+	ntrack_plots.push_back(new TH1F("outer","",6,ptarr));
 	for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 	{
 		(*i)->Sumw2();
@@ -105,6 +118,7 @@ void hemiTrackHister(){
 		(*i)->Scale(bins[count]);
 		(*i)->GetYaxis()->SetRangeUser(10e-8,10e1);
 		(*i)->SetLineColor(colors[count]);
+		(*i)->SetMarkerColor(colors[count]);
 		if (count++==0)(*i)->Draw("e1");
 		else (*i)->Draw("e1 same");
 		tl->AddEntry((*i),(*i)->GetName(),"l");

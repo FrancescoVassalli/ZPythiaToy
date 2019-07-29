@@ -1,12 +1,4 @@
 
-void myText(Double_t x,Double_t y,Color_t color, const char *text, Double_t tsize) {
-	TLatex l; //l.SetTextAlign(12); 
-	l.SetTextSize(tsize); 
-	l.SetNDC();
-	l.SetTextColor(color);
-	l.DrawLatex(x,y,text);
-}
-
 void plotJetnPart(TFile* thisFile){
 	std::vector<TH1F*> ntrack_plots;
 	ntrack_plots.push_back((TH1F*) thisFile->Get("near_lead"));
@@ -28,13 +20,13 @@ void plotJetnPart(TFile* thisFile){
 		tc->SetLogy();
 		tc->SetTicky();
 		TLegend* tl = new TLegend(.7,.7,.9,.9);
-		ntrack_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi}");
-		ntrack_plots[i]->SetXTitle("pT [GeV/c]");
+		ntrack_plots[i]->SetYTitle("1/N_{evt} dN_{ch}/d#Delta#phi");
+		ntrack_plots[i]->SetXTitle("#it{p}_{T} [GeV]");
 		ntrack_plots[i]->SetLineColor(colors[i]);
 		ntrack_plots[i]->SetMarkerColor(colors[i]);
 		ntrack_plots[i]->SetMarkerStyle(styleTypes[i]);
-		ntrack_plots[i+3]->SetYTitle("#frac{dN}{N d#Delta#phi}");
-		ntrack_plots[i+3]->SetXTitle("pT [GeV/c]");
+		ntrack_plots[i+3]->SetYTitle("1/N_{evt} dN_{ch}/d#Delta#phi");
+		ntrack_plots[i+3]->SetXTitle("#it{p}_{T} [GeV]");
 		ntrack_plots[i+3]->SetLineColor(colors[i]);
 		ntrack_plots[i+3]->SetMarkerColor(colors[i]);
 		ntrack_plots[i+3]->SetMarkerStyle(styleTypes[i+3]);
@@ -73,8 +65,8 @@ void plotJetnPart2(TFile* thisFile){
 		tc->SetLogy();
 		tc->SetTicky();
 		TLegend* tl = new TLegend(.7,.7,.9,.9);
-		ntrack_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi}");
-		ntrack_plots[i]->SetXTitle("pT");
+		ntrack_plots[i]->SetYTitle("1/N_{evt} dN/d#Delta#phi");
+		ntrack_plots[i]->SetXTitle("#it{p}_{T} [GeV]");
 		ntrack_plots[i]->SetLineColor(colors[0]);
 		ntrack_plots[i]->SetMarkerColor(colors[0]);
 		ntrack_plots[i]->SetMarkerStyle(styleTypes[0]);
@@ -109,8 +101,8 @@ void plotJetDPhiTracks(TFile* thisFile){
 	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < 4; ++i)
 	{
-		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi}");
-		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
+		dphi_plots[i]->SetYTitle("dN / N_{Z}d#Delta#phi");
+		dphi_plots[i]->SetXTitle("Z-hadron #Delta#phi");
 		dphi_plots[i]->SetLineColor(colors[i]);
 		dphi_plots[i]->GetYaxis()->SetRangeUser(0,14);
 		if(i==0) dphi_plots[i]->Draw("");
@@ -125,13 +117,13 @@ void plotJetDPhiTracks(TFile* thisFile){
 
 void plotJetDPhiTracksWide(TFile* thisFile,string zType){
 	std::vector<TH1F*> dphi_plots;
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 2-3.3 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 3.3-5.4 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 5.4-8.9 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 8.9-14.6 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 14.6-24.0 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 24.0-39.5 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z} 39.5-65 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 2-3.3 #it{p}_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 3.3-5.4 #it{p}_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 5.4-8.9 #it{p}_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 8.9-14.6 #it{p}_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 14.6-24.0 #it{p}_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 24.0-39.5 #it{p}_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" #it{p}_{T}^{Z} 39.5-65 #it{p}_{T}").c_str()));
 	
 	short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
 	TCanvas* tc = new TCanvas();
@@ -139,8 +131,8 @@ void plotJetDPhiTracksWide(TFile* thisFile,string zType){
 	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < dphi_plots.size(); ++i)
 	{
-		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi dp_{T}}");
-		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
+		dphi_plots[i]->SetYTitle("1/N_{Z} dN_{ch}/d#it{p}_{T} d#Delta#phi [GeV^{-1}]");
+		dphi_plots[i]->SetXTitle("Z-hadron #Delta#phi");
 		dphi_plots[i]->SetLineColor(colors[i]);
 		dphi_plots[i]->GetYaxis()->SetRangeUser(0,6);
 		if(i==0) dphi_plots[i]->Draw("");
@@ -163,32 +155,50 @@ void plottest(TFile *thisFile){
 
 void plotdPhiLead(TFile *thisFile,string jetType){
 	std::vector<TH1F*> dphi_plots;
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 2-3.3 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 3.3-5.4 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 5.4-8.9 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 8.9-14.6 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 14.6-24.0 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 24.0-39.5 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((jetType+" 39.5-65 p_{T}").c_str()));
+
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 2-3.3 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 3.3-5.4 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 5.4-8.9 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 8.9-14.6 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 14.6-24.0 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 24.0-39.5 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((jetType + " 39.5-65 p_{T}").c_str()));
+
+  std::vector <string> dphi_plot_labels;
+  dphi_plot_labels.push_back ("2 < #it{p}_{T} < 3.3 GeV");
+  dphi_plot_labels.push_back ("3.3 < #it{p}_{T} < 5.4 GeV");
+  dphi_plot_labels.push_back ("5.4 < #it{p}_{T} < 8.9 GeV");
+  dphi_plot_labels.push_back ("8.9 < #it{p}_{T} < 14.6 GeV");
+  dphi_plot_labels.push_back ("14.6 < #it{p}_{T} < 24.0 GeV");
+  dphi_plot_labels.push_back ("24.0 < #it{p}_{T} < 39.5 GeV");
+  dphi_plot_labels.push_back ("39.5 < #it{p}_{T} < 65 GeV");
 	
-	short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
+	//short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
+  short colors[10] = {kBlack, kRed+1, kBlue+1, kGreen+2, kMagenta, kViolet-3, kCyan+1, kOrange+1, kGreen-7, kAzure+7};
 	TCanvas* tc = new TCanvas();
 	tc->Draw();
-	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
+	//TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < dphi_plots.size(); ++i)
 	{
-		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z}d#Delta#phi dp_{T}}");
-		dphi_plots[i]->SetXTitle("Z-track #Delta#phi");
+		dphi_plots[i]->SetYTitle("1/N_{Z} dN_{ch}/d#it{p}_{T} d#Delta#phi [GeV^{-1}]");
+		dphi_plots[i]->SetXTitle("Z-hadron #Delta#phi");
 		dphi_plots[i]->SetLineColor(colors[i]);
 		dphi_plots[i]->SetMarkerStyle(kFullCircle);
 		dphi_plots[i]->SetMarkerColor(colors[i]);
 		//dphi_plots[i]->GetYaxis()->SetRangeUser(0,8);
+    if (jetType == "leading")
+      dphi_plots[i]->GetYaxis ()->SetRangeUser (0, 4);
+    else if (jetType == "non-lead")
+      dphi_plots[i]->GetYaxis ()->SetRangeUser (0, 1);
 		if(i==0) dphi_plots[i]->Draw("");
 		else dphi_plots[i]->Draw("same");
-		string label = dphi_plots[i]->GetName();
-		myText(.2,.5+.05*i,colors[i],label.substr(jetType.size()).c_str(),.04);
+		myText(.2,.9-.05*i,colors[i],dphi_plot_labels[i].c_str (),.04);
 	}
-	tl->Draw();
+	//tl->Draw();
+  if (jetType == "leading")
+    myText (.55, 0.88, kBlack, "Tracks assoc. with lead. jet", 0.04);
+  else if (jetType == "non-lead")
+    myText (.55, 0.88, kBlack, "Tracks not assoc. with lead. jet", 0.04);
 	string savename = "../plots/";
 	savename += jetType+"_trackpT_dphi.pdf";
 	tc->SaveAs(savename.c_str());
@@ -206,7 +216,7 @@ void plotJetDPhi(TFile* thisFile){
 	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < 4; ++i)
 	{
-		dphi_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi}");
+		dphi_plots[i]->SetYTitle("1/N_{Z} dN_{jet}/d#Delta#phi");
 		dphi_plots[i]->SetXTitle("Z-jet #Delta#phi");
 		dphi_plots[i]->GetYaxis()->SetRangeUser(0,2.5);
 		dphi_plots[i]->SetLineColor(colors[i]);
@@ -215,7 +225,7 @@ void plotJetDPhi(TFile* thisFile){
 		if(i==0) dphi_plots[i]->Draw("");
 		else dphi_plots[i]->Draw("same");
 		string name  = dphi_plots[i]->GetName();
-		name+="p_{T}^{Z} [GeV]";
+		name+="#it{p}_{T}^{Z} [GeV]";
 		tl->AddEntry(dphi_plots[i],name.c_str(),"l");
 	}
 	tl->Draw();
@@ -242,7 +252,7 @@ void plotDPhi(TFile* thisFile,std::vector<string> types){
 	for (std::vector<TH1F*>::iterator i = dphi_pt_plots.begin(); i != dphi_pt_plots.end(); ++i)
 	{
 		(*i)->GetYaxis()->SetRangeUser(10e-5,10e1);
-		(*i)->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		(*i)->SetYTitle("1/N_{evt} dN_{ch}/d#Delta#phi");
 		(*i)->SetXTitle("#Delta#phi");
 		(*i)->SetLineColor(colors[count%3]);
 		(*i)->SetMarkerColor(colors[count%3]);
@@ -281,8 +291,8 @@ void plotdiffpT(const std::vector<string>& types, std::vector<TH1F*> pt_plots){
 	{
 		(*i)->Add(pt_plots[count+3],-1); //subtract the plots
 		(*i)->GetYaxis()->SetRangeUser(-.4,.1); 
-		(*i)->SetYTitle("#frac{dN}{N} mpi:off-on");
-		(*i)->SetXTitle("pT [GeV/c]");
+		(*i)->SetYTitle("dN / N mpi:off-on");
+		(*i)->SetXTitle("#it{p}_{T} [GeV]");
 		(*i)->SetLineColor(colors[count%3]); //color the plots
 		(*i)->SetMarkerColor(colors[count%3]);
 		if (count++==0)(*i)->Draw("e1");
@@ -317,8 +327,8 @@ void plotpT(TFile* thisFile,std::vector<string> types){
 	for (std::vector<TH1F*>::iterator i = pt_plots.begin(); i != pt_plots.end(); ++i)
 	{
 		(*i)->GetYaxis()->SetRangeUser(10e-11,10e1);
-		(*i)->SetYTitle("#frac{dN}{N} d#Delta#phi d#DeltapT");
-		(*i)->SetXTitle("pT [GeV/c]");
+		(*i)->SetYTitle("1/N_{evt} dN_{ch}/d#it{p}_{T} d#Delta#phi [GeV^{-1}]");
+		(*i)->SetXTitle("#it{p}_{T} [GeV]");
 		(*i)->SetLineColor(colors[count%3]);
 		(*i)->SetMarkerColor(colors[count%3]);
 		(*i)->SetMarkerStyle(styleTypes[typeCount]);
@@ -359,7 +369,7 @@ void child_dphi(TFile* thisFile, std::vector<string> types){
 	for (std::vector<TH1F*>::iterator i = plots.begin(); i != plots.end(); ++i)
 	{
 		(*i)->GetYaxis()->SetRangeUser(10e-5,10e1);
-		(*i)->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		(*i)->SetYTitle("1/N_{evt} dN/d#Delta#phi");
 		(*i)->SetXTitle("#Delta#phi");
 		(*i)->SetLineColor(colors[count%kMAXCOLOR]);
 		(*i)->SetMarkerColor(colors[count%kMAXCOLOR]);
@@ -395,8 +405,8 @@ void child_pT(TFile* thisFile, std::vector<string> types){
 	for (std::vector<TH1F*>::iterator i = plots.begin(); i != plots.end(); ++i)
 	{
 		(*i)->GetYaxis()->SetRangeUser(10e-5,10e1);
-		(*i)->SetYTitle("#frac{dN}{N d#Delta#phi}");
-		(*i)->SetXTitle("pT");
+		(*i)->SetYTitle("1/N_{evt} dN/d#Delta#phi");
+		(*i)->SetXTitle("#it{p}_{T} [GeV]");
 		(*i)->SetLineColor(colors[count%kMAXCOLOR]);
 		(*i)->SetMarkerColor(colors[count%kMAXCOLOR]);
 		(*i)->SetMarkerStyle(styleTypes[typeCount]);
@@ -424,8 +434,8 @@ void plotter(){
 	//child_pT(thisFile,types);
 	//plotJetnPart(thisFile);
 	//plotJetnPart2(thisFile);
-	plotJetDPhiTracks(thisFile);
-	plotJetDPhi(thisFile);
+	//plotJetDPhiTracks(thisFile);
+	//plotJetDPhi(thisFile);
 	//plotJetDPhiTracksWide(thisFile,"15-25");
 	//plotJetDPhiTracksWide(thisFile,"25+");
 	plotdPhiLead(thisFile,"leading");

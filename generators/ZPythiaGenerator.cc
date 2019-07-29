@@ -39,19 +39,20 @@ double InTwoPi (double phi) {
 			else phi -= 2*TMath::Pi();
 		}
 		return phi;
-	}
+}
 
-	double DeltaPhi (double phi1, double phi2, const bool sign=0) {
-		phi1 = InTwoPi(phi1);
-		phi2 = InTwoPi(phi2);
-		double dphi = abs(phi1 - phi2);
-		while (dphi > TMath::Pi()) dphi = abs (dphi - 2*TMath::Pi());
+double DeltaPhi (double phi1, double phi2, const bool sign=0) {
+	phi1 = (phi1);
+	phi2 = (phi2);
+	double dphi = abs(phi1 - phi2);
+	while (dphi > TMath::Pi()) dphi = abs (dphi - 2*TMath::Pi());
 
-		if (sign && InTwoPi (phi2 + dphi) == phi1)
-			dphi *= -1;
+	if (sign &&  (phi2 + dphi) == phi1)
+		dphi *= -1;
 
-		return dphi;
-	}
+	return dphi;
+}
+<<<<<<< Updated upstream
 
 /**
  * Returns dR between two eta, phi coordinates.
@@ -61,6 +62,8 @@ double DeltaR (const double eta1, const double eta2, const double phi1, const do
  const double dphi = DeltaPhi (phi1, phi2, false);
  return sqrt( pow( deta, 2 ) + pow( dphi, 2 ) );
 }
+=======
+>>>>>>> Stashed changes
 
 
 void tagChildren(Pythia8::Particle parent,std::set<int>* childIndexSet,Pythia* pythia){
@@ -78,7 +81,7 @@ void tagChildren(Pythia8::Particle parent,std::set<int>* childIndexSet,Pythia* p
 
 int main (int argc, char *argv[]) {
 
-	if (argc < 4) {
+	if (argc < 3) {
 		cout<<"args error"<<endl;
 	}
 
@@ -87,6 +90,8 @@ int main (int argc, char *argv[]) {
 
 	pythia.readString ("Beams:eCM = 5020.");
 	pythia.readString("Random::setSeed = on");
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	pythia.readString("Random::seed =0");
 	pythia.readString("PartonLevel:FSR=off");
 	pythia.readString("PartonLevel:ISR=on");
@@ -95,17 +100,35 @@ int main (int argc, char *argv[]) {
 	{
 		if (argv[4][0]=='i')
 		{
+=======
+	pythia.readString("Random::seed =1");
+	pythia.readString("PartonLevel:FSR=on");
+	pythia.readString("PartonLevel:ISR=on");
+=======
+	pythia.readString("Random::seed =1");
+	pythia.readString("PartonLevel:FSR=on");
+	pythia.readString("PartonLevel:ISR=on");
+>>>>>>> Stashed changes
+	//pythia.readString("PartonLevel:MPI=off");
+	//if (argc>=5)
+	//{
+	//	if (argv[4][0]=='i')
+	//	{
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 			pythia.readString ("WeakSingleBoson:ffbar2gmZ = on");       // code 221
 			pythia.readString ("WeakDoubleBoson:ffbar2gmZgmZ = on");    // code 231
 			pythia.readString ("WeakDoubleBoson:ffbar2ZW = on");        // code 232
 			pythia.readString ("WeakBosonAndParton:ffbar2gmZgm = on");  // code 243
 			pythia.readString ("WeakBosonAndParton:fgm2gmZf = on");     // code 244
-		}
-		if (argv[4][1]=='o')
-		{
+	//	}
+	//	if (argv[4][1]=='o')
+	//	{
 			pythia.readString("PartonLevel:MPI=on");
-		}
-	}
+	//	}
+	//}
 
 	pythia.readString("23:onMode = off");
 	pythia.readString("23:onIfAny = 11 13");
@@ -198,7 +221,9 @@ int main (int argc, char *argv[]) {
 	unsigned nFinalChildren=0;
 	unsigned totalGluon=0;
 
-	for (int iEvent = 0; iEvent < NEVT; iEvent++) {
+  //bool printEvent = false;
+
+	for (int iEvent = 0; iEvent < NEVT/* && !printEvent*/; iEvent++) {
 		clock_t startPythia = clock();
 		if (!pythia.next ())
 			continue;
@@ -327,7 +352,37 @@ int main (int argc, char *argv[]) {
 			totalGluon++;
 		}
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		antikT04->analyze (pythia.event);
+=======
+=======
+>>>>>>> Stashed changes
+
+    bool keepEvent = false;
+		for (int i = 0; i < pythia.event.size (); i++) {
+			if (pythia.event[i].pT() >= 15 && pythia.event[i].isFinal() && TMath::Abs(pythia.event[i].eta())<2.5 && pythia.event[i].isCharged () && pythia.event[i].isHadron ())
+      {
+        const float dphi = DeltaPhi (pythia.event[i].phi (), b_z_phi[0]); // already checked n_z = 1
+        if (dphi < TMath::Pi ()/2) {
+          cout << "CHECK OUT PARTICLE " << i << endl;
+          keepEvent = true;
+        }
+      }
+    }
+
+    //if (printEvent) {
+    //  cout << "ID code: " << pythia.info.code ();
+    //  cout << "x1: " << pythia.info.x1pdf ();
+    //  cout << "x2: " << pythia.info.x2pdf ();
+    //  cout << "Q: " << pythia.info.QFac ();
+    //  pythia.event.list ();
+    //}
+    if (!printEvent)
+      continue;
+
+		//antikT04->analyze (pythia.event);
+>>>>>>> Stashed changes
 		//antikT10->analyze (pythia.event);
 		b_lead_pt = -1.;
 		b_sublead_pt=-1.;
@@ -448,6 +503,9 @@ int main (int argc, char *argv[]) {
 		if (NEVT>100&&iEvent % (NEVT/100) == 0)
 			std::cout << iEvent / (NEVT/100) << "\% done...\r" << std::flush;
 	}
+
+  //if (!printEvent)
+  //  cout << "NO EVENT FOUND!" << endl;
 
 	pythia.stat();
 
