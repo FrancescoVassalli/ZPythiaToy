@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include "Utilities.C"
+#include "Utilities.h"
 
 using namespace std;
 using namespace atlashi;
@@ -27,11 +27,8 @@ void childTaggedHister(){
 	string name = "../pythiadata/";
 	string extention = ".root";
 	std::vector<string> options;
-	options.push_back("mpioff_inclusive1");
-	options.push_back("jet_mpi_inclusive1");
-	options.push_back("jet_mpi_inclusive2");
-	options.push_back("jet_mpi_inclusive3");
-	options.push_back("jet_mpi_inclusive4");
+	options.push_back("mpioff_inclusive");
+	options.push_back("jet_mpi_inclusive");
 	options.push_back("fff_inclusive");
 
 	std::vector<TChain*> chains;
@@ -39,12 +36,14 @@ void childTaggedHister(){
 	for (unsigned i=0; i<options.size();++i)
 	{
 		chains.push_back(new TChain("tree"));
-		/*string name1 = name+options[i]+"1"+extention;
-			string name2 = name+options[i]+"2"+extention;
-			chains[i]->Add(name1.c_str());
-			chains[i]->Add(name2.c_str());*/
-		string name1 = name+options[i]+extention;
+		string name1 = name+options[i]+"1"+extention;
+		string name2 = name+options[i]+"2"+extention;
+		string name3 = name+options[i]+"3"+extention;
+		string name4 = name+options[i]+"4"+extention;
 		chains[i]->Add(name1.c_str());
+		chains[i]->Add(name2.c_str());
+		chains[i]->Add(name3.c_str());
+		chains[i]->Add(name4.c_str());
 	}
 	std::vector<string>::iterator nameit=options.begin();
 	for (std::vector<TChain*>::iterator chainpointer = chains.begin(); chainpointer != chains.end(); ++chainpointer)
