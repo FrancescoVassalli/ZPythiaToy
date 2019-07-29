@@ -9,46 +9,58 @@ void myText(Double_t x,Double_t y,Color_t color, const char *text, Double_t tsiz
 
 void plotJetnPart(TFile* thisFile){
 	std::vector<TH1F*> ntrack_plots;
-	ntrack_plots.push_back((TH1F*) thisFile->Get("near_lead"));
-	ntrack_plots.push_back((TH1F*) thisFile->Get("medium_lead"));
-	ntrack_plots.push_back((TH1F*) thisFile->Get("away_lead"));
-	ntrack_plots.push_back((TH1F*) thisFile->Get("near_sub"));
-	ntrack_plots.push_back((TH1F*) thisFile->Get("medium_sub"));
-	ntrack_plots.push_back((TH1F*) thisFile->Get("away_sub"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_leading_#Delta#phi#in[0,#frac{#pi}{2}]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_leading_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_leading_#Delta#phi#in[#frac{15#pi}{16},#pi]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_sub_#Delta#phi#in[0,#frac{#pi}{2}]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_sub_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_sub_#Delta#phi#in[#frac{15#pi}{16},#pi]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_other_#Delta#phi#in[0,#frac{#pi}{2}]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_other_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]"));
+	ntrack_plots.push_back((TH1F*) thisFile->Get("p_{Z}^{T}>25_other_#Delta#phi#in[#frac{15#pi}{16},#pi]"));
 
 	unsigned typeCount=0;
 	short colors[3]={kBlack,kRed,kBlue};
-	short styleTypes[6]={kFullCircle,kFullTriangleUp,kFullStar,kOpenCircle,kOpenTriangleUp,kOpenStar};
+	short styleTypes[6]={kOpenCircle,kOpenTriangleUp,kOpenStar};
 	string titles[3]={"nTracks for jet in Z going #Delta#phi#in[0,#frac{#pi}{2}]",
 		"nTracks for jet in hemisphere #Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]",
 		"nTracks for jet in away from Z #Delta#phi#in[#frac{15#pi}{16},#pi]"};
+	TCanvas* tc = new TCanvas();
+	tc->SetLogy();
+	tc->SetTicky();
+	TLegend* tl = new TLegend(.7,.7,.9,.9);
 	for (int i = 0; i < 3; ++i)
 	{
-		TCanvas* tc = new TCanvas();
-		tc->SetLogy();
-		tc->SetTicky();
-		TLegend* tl = new TLegend(.7,.7,.9,.9);
-		ntrack_plots[i]->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		ntrack_plots[i]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi d#DeltapT}");
 		ntrack_plots[i]->SetXTitle("pT [GeV/c]");
 		ntrack_plots[i]->SetLineColor(colors[i]);
 		ntrack_plots[i]->SetMarkerColor(colors[i]);
-		ntrack_plots[i]->SetMarkerStyle(styleTypes[i]);
-		ntrack_plots[i+3]->SetYTitle("#frac{dN}{N d#Delta#phi}");
+		ntrack_plots[i]->SetMarkerStyle(styleTypes[0]);
+		ntrack_plots[i+3]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi d#DeltapT}");
 		ntrack_plots[i+3]->SetXTitle("pT [GeV/c]");
 		ntrack_plots[i+3]->SetLineColor(colors[i]);
 		ntrack_plots[i+3]->SetMarkerColor(colors[i]);
-		ntrack_plots[i+3]->SetMarkerStyle(styleTypes[i+3]);
-		ntrack_plots[i]->Draw("e1");
+		ntrack_plots[i+3]->SetMarkerStyle(styleTypes[1]);
+		ntrack_plots[i+6]->SetYTitle("#frac{dN}{N_{Z} d#Delta#phi d#DeltapT}");
+		ntrack_plots[i+6]->SetXTitle("pT [GeV/c]");
+		ntrack_plots[i+6]->SetLineColor(colors[i]);
+		ntrack_plots[i+6]->SetMarkerColor(colors[i]);
+		ntrack_plots[i+6]->SetMarkerStyle(styleTypes[2]);
+		if(i==0) ntrack_plots[i]->Draw("e1");
+		else ntrack_plots[i]->Draw("e1 same");
 		ntrack_plots[i+3]->Draw("e1 same");
+		ntrack_plots[i+6]->Draw("e1 same");
 		tl->AddEntry(ntrack_plots[i],"leading jet","p");
-		tl->AddEntry(ntrack_plots[i+3],"non-leading jet","p");
-		tl->Draw();
-		myText(.4,.6,colors[i],titles[i].c_str(),.04);
+		tl->AddEntry(ntrack_plots[i+3],"sub-leading jet","p");
+		tl->AddEntry(ntrack_plots[i+6],"other","p");
+		myText(.2,.75+.05*i,colors[i],titles[i].c_str(),.04);
 		string savename = "../plots/Zjet_ntrack_dphi_";
 		savename+=ntrack_plots[i]->GetName();
 		savename+=".pdf";
-		tc->SaveAs(savename.c_str());	
 	}
+		tl->Draw();
+		tc->SaveAs("test.pdf");	
+
 }
 
 void plotJetnPart2(TFile* thisFile){
@@ -421,10 +433,10 @@ void plotter(){
 	types.push_back("jet_mpi_inclusive4");
 	TFile *thisFile = new TFile("hists.root","READ");
 	//plotDPhi(thisFile,types);
-	plotpT(thisFile,types);
+	//plotpT(thisFile,types);
 	//child_dphi(thisFile,types);
 	//child_pT(thisFile,types);
-	//plotJetnPart(thisFile);
+	plotJetnPart(thisFile);
 	//plotJetnPart2(thisFile);
 	//plotJetDPhiTracks(thisFile);
 	//plotJetDPhi(thisFile);

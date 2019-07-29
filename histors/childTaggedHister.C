@@ -40,9 +40,9 @@ void childTaggedHister(){
 	{
 		chains.push_back(new TChain("tree"));
 		/*string name1 = name+options[i]+"1"+extention;
-		string name2 = name+options[i]+"2"+extention;
-		chains[i]->Add(name1.c_str());
-		chains[i]->Add(name2.c_str());*/
+			string name2 = name+options[i]+"2"+extention;
+			chains[i]->Add(name1.c_str());
+			chains[i]->Add(name2.c_str());*/
 		string name1 = name+options[i]+extention;
 		chains[i]->Add(name1.c_str());
 	}
@@ -84,11 +84,12 @@ void childTaggedHister(){
 		t->SetBranchAddress ("part_phi",  &part_phi);
 		t->SetBranchAddress ("part_child", &part_child);
 
-		std::vector<TH1F*> ntrack_plots;
+		const float myBins[11]={2,2.58,3.28,4.21,5.4,7.3,8.89,11.5,14.62,24.04,39.53};
 
-		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[0,#frac{#pi}{2}]").c_str(),"",7,logspace(2,65,10)));
-		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]").c_str(),"",7,logspace(2,65,10)));
-		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[#frac{15#pi}{16},#pi]").c_str(),"",7,logspace(2,65,10)));
+		std::vector<TH1F*> ntrack_plots;
+		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[0,#frac{#pi}{2}]").c_str(),"",10,myBins));
+		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]").c_str(),"",10,myBins));
+		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[#frac{15#pi}{16},#pi]").c_str(),"",10,myBins));
 		for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
@@ -200,8 +201,6 @@ void childTaggedHister(){
 		thisFile->Write();
 		nameit++;
 	}
-	
-
 	thisFile->Close();
 }
 
