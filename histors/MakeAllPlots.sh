@@ -1,6 +1,6 @@
 rm hists.root
-root -b -q jetZHister.C
-root -b -q childTaggedHister.C
-root -b -q ZTrackHister.C
-root -b -q jetZhister.C
-root -b -q minBiasHister.C
+root -l -b -q jetZHister.C
+root -l -b -q childTaggedHister.C
+root -l -b -q ZTrackHister.C
+root -l -b -q jetZHister.C
+root -l -b -q minBiasHister.C
