@@ -460,24 +460,24 @@ void child_pT(TFile* thisFile, std::vector<string> types){
 
 void plotter(){
 	std::vector<string> types;
-	types.push_back("mpioff_inclusive1");
+	types.push_back("mpioff_inclusive");
 	types.push_back("fff_inclusive");
 	//types.push_back("jet_mpi_inclusive1");
 	//types.push_back("jet_mpi_inclusive2");
 	//types.push_back("jet_mpi_inclusive3");
-	types.push_back("jet_mpi_inclusive4");
+	types.push_back("jet_mpi_inclusive");
 	TFile *thisFile = new TFile("hists.root","READ");
 	//plotDPhi(thisFile,types);
 	//plotpT(thisFile,types);
 	//child_dphi(thisFile,types);
 	//child_pT(thisFile,types);
-	plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
+	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
 	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
 
 	//plotJetDPhiTracksWide(thisFile,"15-25");
 	//plotJetDPhiTracksWide(thisFile,"25+");
 
 	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_leading");
-	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_non-lead");
+	//plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_non-lead");
 
 }
