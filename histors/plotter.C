@@ -482,6 +482,39 @@ void child_pT(TFile* thisFile, std::vector<string> types){
 
 }
 
+void dlead_dtotal_dphi(TFile* thisFile,string zType){
+	std::vector<TH1F*> dphi_dlead_dtotal_plots;
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_2-3.3 p_{T}").c_str()));
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_3.3-5.4 p_{T}").c_str()));
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_5.4-8.9 p_{T}").c_str()));
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_8.9-14.6 p_{T}").c_str()));
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_14.6-24.0 p_{T}").c_str()));
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_24.0-39.5 p_{T}").c_str()));
+	dphi_dlead_dtotal_plots.push_back((TH1F*) thisFile->Get((zType+"_dleading_dtotal_39.5-65 p_{T}").c_str()));
+	TCanvas* tc = new TCanvas();
+	tc->SetTicky();
+
+	unsigned count=0;
+	short colors[10] = {kBlack, kRed+1, kBlue+1, kGreen+2, /*kMagenta,*/ kOrange+1, kViolet-3, kCyan+1, kOrange+1, kGreen-7, kAzure+7};
+	TLegend* tl = new TLegend(.7,.1,.9,.3);
+	for (std::vector<TH1F*>::iterator i = dphi_dlead_dtotal_plots.begin(); i != dphi_dlead_dtotal_plots.end(); ++i)
+	{
+		(*i)->SetYTitle("1/N_{evt} #frac{dN_{ch#inleading}}{d#Delta#phidN_{ch}}");
+		(*i)->SetXTitle("#Delta#phi");
+		(*i)->SetLineColor(colors[count]);
+		(*i)->SetMarkerColor(colors[count]);
+		(*i)->SetMarkerStyle(kOpenCircle);
+		if (count++==0)(*i)->Draw("e1");
+		else (*i)->Draw("e1 same");
+		//tl->AddEntry((*i),(*i)->GetName(),"p");
+	}
+	//tl->Draw();
+	string savename = "../plots/";
+	savename+=zType;
+	savename+="_dleading_dtotal_dphi.pdf";
+	tc->SaveAs(savename.c_str());
+}
+
 void plotter(){
 	std::vector<string> types;
 	types.push_back("mpioff_inclusive");
@@ -497,14 +530,15 @@ void plotter(){
 	//child_pT(thisFile,types);
 	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
 	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
-	plotJetDPhiTracksWide(thisFile,"15-25");
-	plotJetDPhiTracksWide(thisFile,"25+");
-
-
-	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_leading");
-	//plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_non-lead");
-
-	plotdPhiLead(thisFile,"p_{Z}^{T}>25_leading");
-	plotdPhiLead(thisFile,"p_{Z}^{T}>25_non-lead");
-
+	//plotJetDPhiTracksWide(thisFile,"15-25");
+	//plotJetDPhiTracksWide(thisFile,"25+");
+//
+//
+	//plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_leading");
+	////plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_non-lead");
+//
+	//plotdPhiLead(thisFile,"p_{Z}^{T}>25_leading");
+	//plotdPhiLead(thisFile,"p_{Z}^{T}>25_non-lead");
+	dlead_dtotal_dphi(thisFile,"15-p_{Z}^{T}-25");
+	dlead_dtotal_dphi(thisFile,"p_{Z}^{T}-25");
 }
