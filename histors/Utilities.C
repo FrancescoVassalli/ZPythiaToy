@@ -9,6 +9,14 @@ using namespace std;
 namespace atlashi {
 long double pi = TMath::Pi();
 
+void myText(Double_t x,Double_t y,Color_t color, const char *text, Double_t tsize) {
+  TLatex l; //l.SetTextAlign(12); 
+  l.SetTextSize(tsize); 
+  l.SetNDC();
+  l.SetTextColor(color);
+  l.DrawLatex(x,y,text);
+}
+
 /**
  * Returns a TString summarizing a measurement.
  * By default, there is only 1 significant digit in the error.

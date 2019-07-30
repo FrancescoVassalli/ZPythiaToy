@@ -137,30 +137,54 @@ void plotJetDPhiTracks(TFile* thisFile){
 
 void plotJetDPhiTracksWide(TFile* thisFile,string zType){
 	std::vector<TH1F*> dphi_plots;
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 2-3.3 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 3.3-5.4 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 5.4-8.9 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 8.9-14.6 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 14.6-24.0 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 24.0-39.5 p_{T}").c_str()));
-	dphi_plots.push_back((TH1F*) thisFile->Get((zType+"_#it{p}{T}^{Z} 39.5-65 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_2-3.3 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_3.3-5.4 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_5.4-8.9 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_8.9-14.6 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_14.6-24.0 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_24.0-39.5 p_{T}").c_str()));
+	dphi_plots.push_back((TH1F*) thisFile->Get((zType+" p_{T}^{Z}_39.5-65 p_{T}").c_str()));
+
+  std::vector <string> dphi_plot_labels;
+  dphi_plot_labels.push_back ("2 < #it{p}_{T} < 3.3 GeV");
+  dphi_plot_labels.push_back ("3.3 < #it{p}_{T} < 5.4 GeV");
+  dphi_plot_labels.push_back ("5.4 < #it{p}_{T} < 8.9 GeV");
+  dphi_plot_labels.push_back ("8.9 < #it{p}_{T} < 14.6 GeV");
+  dphi_plot_labels.push_back ("14.6 < #it{p}_{T} < 24.0 GeV");
+  dphi_plot_labels.push_back ("24.0 < #it{p}_{T} < 39.5 GeV");
+  dphi_plot_labels.push_back ("39.5 < #it{p}_{T} < 65 GeV");
 	
-	short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
+	//short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
+  short colors[10] = {kBlack, kRed+1, kBlue+1, kGreen+2, /*kMagenta,*/ kOrange+1, kViolet-3, kCyan+1, kOrange+1, kGreen-7, kAzure+7};
 	TCanvas* tc = new TCanvas();
 	tc->Draw();
-	TLegend* tl = new TLegend(1.5,.7,3.5,.9);
+	//TLegend* tl = new TLegend(1.5,.7,3.5,.9);
 	for (int i = 0; i < dphi_plots.size(); ++i)
 	{
 		dphi_plots[i]->SetYTitle("1/N_{Z} dN_{ch}/d#it{p}_{T} d#Delta#phi [GeV^{-1}]");
 		dphi_plots[i]->SetXTitle("Z-hadron #Delta#phi");
 		dphi_plots[i]->SetLineColor(colors[i]);
+    dphi_plots[i]->SetMarkerColor(colors[i]);
 		dphi_plots[i]->GetYaxis()->SetRangeUser(0,6);
 		if(i==0) dphi_plots[i]->Draw("");
 		else dphi_plots[i]->Draw("same");
 		string label = dphi_plots[i]->GetName();
-		myText(.2,.5+.05*i,colors[i],label.substr(zType.size()+10).c_str(),.04);
+		myText(.2,.9-.05*i,colors[i],dphi_plot_labels[i].c_str (),.04);
 	}
-	tl->Draw();
+	//tl->Draw();
+  myText (0.70, 0.88, kBlack, "Pythia8", 0.04);
+  if (zType == "15-25") {
+    myText (0.70, 0.82, kBlack, "15 < #it{p}_{T}^{Z} < 25 GeV", 0.04);
+  }
+  else if (zType == "15-25") {
+    myText (0.70, 0.82, kBlack, "15 < #it{p}_{T}^{Z} < 25 GeV", 0.04);
+  }
+  else if (zType == "25+") {
+    myText (0.70, 0.82, kBlack, "#it{p}_{T}^{Z} > 25 GeV", 0.04);
+  }
+  else if (zType == "25+") {
+    myText (0.70, 0.82, kBlack, "#it{p}_{T}^{Z} > 25 GeV", 0.04);
+  }
 	string savename = "../plots/";
 	savename += zType+"_trackpT_dphi.pdf";
 	tc->SaveAs(savename.c_str());
@@ -193,7 +217,7 @@ void plotdPhiLead(TFile *thisFile,string jetType){
   dphi_plot_labels.push_back ("39.5 < #it{p}_{T} < 65 GeV");
 	
 	//short colors[7]={kBlack,kRed,kBlue,kGreen+3,kMagenta-5,kMagenta+4,kCyan-4};
-  short colors[10] = {kBlack, kRed+1, kBlue+1, kGreen+2, kMagenta, kViolet-3, kCyan+1, kOrange+1, kGreen-7, kAzure+7};
+  short colors[10] = {kBlack, kRed+1, kBlue+1, kGreen+2, /*kMagenta,*/ kOrange+1, kViolet-3, kCyan+1, kOrange+1, kGreen-7, kAzure+7};
 	TCanvas* tc = new TCanvas();
 	tc->Draw();
 	//TLegend* tl = new TLegend(1.5,.7,3.5,.9);
@@ -460,28 +484,27 @@ void child_pT(TFile* thisFile, std::vector<string> types){
 
 void plotter(){
 	std::vector<string> types;
-	types.push_back("mpioff_inclusive1");
+	types.push_back("mpioff_inclusive");
 	types.push_back("fff_inclusive");
 	//types.push_back("jet_mpi_inclusive1");
 	//types.push_back("jet_mpi_inclusive2");
 	//types.push_back("jet_mpi_inclusive3");
-	types.push_back("jet_mpi_inclusive4");
+	types.push_back("jet_mpi_inclusive");
 	TFile *thisFile = new TFile("hists.root","READ");
 	//plotDPhi(thisFile,types);
 	//plotpT(thisFile,types);
 	//child_dphi(thisFile,types);
 	//child_pT(thisFile,types);
-	//plotJetnPart(thisFile,"p_{Z}^{T}>25");
 	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
-	//plotJetnPart2(thisFile);
-	//plotJetDPhiTracks(thisFile);
-	//plotJetDPhi(thisFile);
-	//plotJetDPhiTracksWide(thisFile,"15-25");
-	//plotJetDPhiTracksWide(thisFile,"25+");
+	//plotJetnPart(thisFile,"15<p_{Z}^{T}<25");
+
+	plotJetDPhiTracksWide(thisFile,"15-25");
+	plotJetDPhiTracksWide(thisFile,"25+");
+
 	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_leading");
 	plotdPhiLead(thisFile,"15<p_{Z}^{T}<25_non-lead");
 
 	plotdPhiLead(thisFile,"p_{Z}^{T}>25_leading");
 	plotdPhiLead(thisFile,"p_{Z}^{T}>25_non-lead");
-	//plottest(thisFile);
+
 }
