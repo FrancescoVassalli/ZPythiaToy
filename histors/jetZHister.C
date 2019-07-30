@@ -65,26 +65,26 @@ void jetZHister(){
 	const float myBins[11]={2,2.58,3.28,4.21,5.4,7.3,8.89,11.5,14.62,24.04,39.53};
 
 	std::vector<TH1F*> ntrack_plots;
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_sub_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_sub_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_sub_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_other_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_other_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
-	ntrack_plots.push_back(new TH1F("p_{Z}^{T}>25_other_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_sub_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_sub_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_sub_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_other_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_other_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
+	ntrack_plots.push_back(new TH1F("p_{Z}^{T}-25_other_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
 
 	std::vector<TH1F*> ntrack_lowpt_plots;
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_sub_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_sub_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_sub_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_other_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_other_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
-	ntrack_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_other_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_sub_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_sub_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_sub_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_other_#Delta#phi#in[0,#frac{#pi}{2}]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_other_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]","",10,myBins));
+	ntrack_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_other_#Delta#phi#in[#frac{15#pi}{16},#pi]","",10,myBins));
 
 	std::vector<TH1F*> dphi_plots;
 	dphi_plots.push_back(new TH1F("10-20","",100,0,2*TMath::Pi()));
@@ -99,36 +99,36 @@ void jetZHister(){
 	dphi_jet_plots.push_back(new TH1F("80+_jets","",20,0,  2*TMath::Pi()));
 
 	std::vector<TH1F*> dphi_lead_plots;
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_leading_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_2-3.3 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_3.3-5.4 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_5.4-8.9 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_8.9-14.6 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_14.6-24.0 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_24.0-39.5 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}>25_non-lead_39.5-65 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_non-lead_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
 
 	std::vector<TH1F*> dphi_lead_lowpt_plots;
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_leading_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_2-3.3 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_3.3-5.4 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_5.4-8.9 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_8.9-14.6 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_14.6-24.0 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_24.0-39.5 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
-	dphi_lead_lowpt_plots.push_back(new TH1F("15<p_{Z}^{T}<25_non-lead_39.5-65 p_{T}","",20,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_non-lead_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
 
 	//initialize the errors
 	for (unsigned i =0; i<dphi_lead_plots.size(); i++)
@@ -420,6 +420,7 @@ void jetZHister(){
 	for (unsigned i : zCounts){
 		totalZ+=i;
 	}
+
 	for (int i = 0; i < dphi_lead_plots.size(); ++i)
 	{
 		if(i<ntrack_plots.size()){
@@ -437,6 +438,27 @@ void jetZHister(){
 		dphi_lead_lowpt_plots[i]->Scale(1./zCount1525,"width");
 		dphi_lead_lowpt_plots[i]->Scale(pTbins[i%7]);
 	}
+	TH1F *dphi_dlead_dtotal25 = new TH1F("p_{Z}^{T}-25_dleading_dtotal_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
+	TH1F *dphi_dlead_dtotal15 = new TH1F("15-p_{Z}^{T}-25_dleading_dtotal_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
+	TH1F *dphi_total25 = new TH1F("25_total_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
+	TH1F *dphi_total15 = new TH1F("15_total_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
+	dphi_dlead_dtotal25->Sumw2();
+	dphi_dlead_dtotal15->Sumw2();
+	dphi_total15->Sumw2();
+	dphi_total25->Sumw2();
+	for (int i = 0; i < dphi_lead_lowpt_plots.size(); ++i)
+	{
+		dphi_total25->Add(dphi_lead_plots[i],1);
+		dphi_total15->Add(dphi_lead_lowpt_plots[i],1);
+		if (i<7)
+		{
+			dphi_dlead_dtotal15->Add(dphi_lead_lowpt_plots[i],1);
+			dphi_dlead_dtotal25->Add(dphi_lead_plots[i],1);
+		}
+	}
+	dphi_dlead_dtotal15->Divide(dphi_total15);
+	dphi_dlead_dtotal25->Divide(dphi_total25);
+
 	thisFile->Write();
 	//thisFile->Close();
 }
