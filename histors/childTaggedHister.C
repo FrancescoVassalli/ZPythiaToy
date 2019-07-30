@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include "Utilities.C"
+#include "Utilities.h"
 
 using namespace std;
 using namespace atlashi;
@@ -27,23 +27,23 @@ void childTaggedHister(){
 	string name = "../pythiadata/";
 	string extention = ".root";
 	std::vector<string> options;
-	options.push_back("inclusive_mpioff");
-	options.push_back("inclusive_mpion");
-	options.push_back("forced_mpioff");
-	options.push_back("forced_mpion");
-	
+	options.push_back("mpioff_inclusive");
+	options.push_back("jet_mpi_inclusive");
+	options.push_back("fff_inclusive");
 
 	std::vector<TChain*> chains;
 
 	for (unsigned i=0; i<options.size();++i)
 	{
 		chains.push_back(new TChain("tree"));
-		/*string name1 = name+options[i]+"1"+extention;
+		string name1 = name+options[i]+"1"+extention;
 		string name2 = name+options[i]+"2"+extention;
+		string name3 = name+options[i]+"3"+extention;
+		string name4 = name+options[i]+"4"+extention;
 		chains[i]->Add(name1.c_str());
-		chains[i]->Add(name2.c_str());*/
-		string name1 = name+options[i]+extention;
-		chains[i]->Add(name1.c_str());
+		chains[i]->Add(name2.c_str());
+		chains[i]->Add(name3.c_str());
+		chains[i]->Add(name4.c_str());
 	}
 	std::vector<string>::iterator nameit=options.begin();
 	for (std::vector<TChain*>::iterator chainpointer = chains.begin(); chainpointer != chains.end(); ++chainpointer)
@@ -83,27 +83,28 @@ void childTaggedHister(){
 		t->SetBranchAddress ("part_phi",  &part_phi);
 		t->SetBranchAddress ("part_child", &part_child);
 
-		std::vector<TH1F*> ntrack_plots;
+		const float myBins[11]={2,2.58,3.28,4.21,5.4,7.3,8.89,11.5,14.62,24.04,39.53};
 
-		ntrack_plots.push_back(new TH1F((*nameit+" near").c_str(),"",7,logspace(2,65,7)));
-		ntrack_plots.push_back(new TH1F((*nameit+" middle").c_str(),"",7,logspace(2,65,7)));
-		ntrack_plots.push_back(new TH1F((*nameit+" away").c_str(),"",7,logspace(2,65,7)));
+		std::vector<TH1F*> ntrack_plots;
+		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[0,#frac{#pi}{2}]").c_str(),"",10,myBins));
+		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[#frac{3#pi}{4},#frac{15#pi}{16}]").c_str(),"",10,myBins));
+		ntrack_plots.push_back(new TH1F((*nameit+"_#Delta#phi#in[#frac{15#pi}{16},#pi]").c_str(),"",10,myBins));
 		for (std::vector<TH1F*>::iterator i = ntrack_plots.begin(); i != ntrack_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
 		}
 
 		std::vector<TH1F*> ntrackChild_plots;
-		ntrackChild_plots.push_back(new TH1F((*nameit+" child_ntrack").c_str(),"",7,logspace(2,65,7)));
-		ntrackChild_plots.push_back(new TH1F((*nameit+" forgein_ntrack").c_str(),"",7,logspace(2,65,7)));
+		ntrackChild_plots.push_back(new TH1F((*nameit+"_child_ntrack").c_str(),"",7,logspace(2,65,7)));
+		ntrackChild_plots.push_back(new TH1F((*nameit+"_forgein_ntrack").c_str(),"",7,logspace(2,65,7)));
 		for (std::vector<TH1F*>::iterator i = ntrackChild_plots.begin(); i != ntrackChild_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
 		}
 
 		std::vector<TH1F*> dphi_child_plots;
-		dphi_child_plots.push_back(new TH1F((*nameit+" child_dphi").c_str(),"",10,0,TMath::Pi()));
-		dphi_child_plots.push_back(new TH1F((*nameit+" forgein_dphi").c_str(),"",10,0,TMath::Pi()));
+		dphi_child_plots.push_back(new TH1F((*nameit+"_child_dphi").c_str(),"",10,0,TMath::Pi()));
+		dphi_child_plots.push_back(new TH1F((*nameit+"_forgein_dphi").c_str(),"",10,0,TMath::Pi()));
 		for (std::vector<TH1F*>::iterator i = dphi_child_plots.begin(); i != dphi_child_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
@@ -113,9 +114,9 @@ void childTaggedHister(){
 		pair<float,float> midptRange(5.4,8.9);
 		pair<float,float> highptRange(24,39.5);
 		std::vector<TH1F*> dphi_pt_plots;
-		dphi_pt_plots.push_back(new TH1F((*nameit+" lowpt").c_str(),"",10,0,TMath::Pi()));
-		dphi_pt_plots.push_back(new TH1F((*nameit+" midpt").c_str(),"",10,0,TMath::Pi()));
-		dphi_pt_plots.push_back(new TH1F((*nameit+" highpt").c_str(),"",10,0,TMath::Pi()));
+		dphi_pt_plots.push_back(new TH1F((*nameit+"_lowpt").c_str(),"",10,0,TMath::Pi()));
+		dphi_pt_plots.push_back(new TH1F((*nameit+"_midpt").c_str(),"",10,0,TMath::Pi()));
+		dphi_pt_plots.push_back(new TH1F((*nameit+"_highpt").c_str(),"",10,0,TMath::Pi()));
 		for (std::vector<TH1F*>::iterator i = dphi_pt_plots.begin(); i != dphi_pt_plots.end(); ++i)
 		{
 			(*i)->Sumw2();
@@ -125,7 +126,7 @@ void childTaggedHister(){
 		unsigned totalChildren=0;
 		for (int iEvt = 0; iEvt < t->GetEntries(); iEvt++) {
 			t->GetEntry (iEvt);
-			if(z_n!=1)continue;
+			if(z_n!=0&&z_pt->at(0)<25)continue;
 			totalZ+=z_n;
 			for (unsigned i=0; i < part_pt->size(); i++) {
 				//fill ntrack by deltaphi plots
@@ -199,8 +200,6 @@ void childTaggedHister(){
 		thisFile->Write();
 		nameit++;
 	}
-	
-
 	thisFile->Close();
 }
 
