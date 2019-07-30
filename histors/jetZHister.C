@@ -438,27 +438,44 @@ void jetZHister(){
 		dphi_lead_lowpt_plots[i]->Scale(1./zCount1525,"width");
 		dphi_lead_lowpt_plots[i]->Scale(pTbins[i%7]);
 	}
-	TH1F *dphi_dlead_dtotal25 = new TH1F("p_{Z}^{T}-25_dleading_dtotal_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
-	TH1F *dphi_dlead_dtotal15 = new TH1F("15-p_{Z}^{T}-25_dleading_dtotal_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
-	TH1F *dphi_total25 = new TH1F("25_total_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
-	TH1F *dphi_total15 = new TH1F("15_total_tracks_#Delta#phi","",40,-1*TMath::PiOver2(),3./2*TMath::Pi());
-	dphi_dlead_dtotal25->Sumw2();
-	dphi_dlead_dtotal15->Sumw2();
-	dphi_total15->Sumw2();
-	dphi_total25->Sumw2();
-	for (int i = 0; i < dphi_lead_lowpt_plots.size(); ++i)
-	{
-		dphi_total25->Add(dphi_lead_plots[i],1);
-		dphi_total15->Add(dphi_lead_lowpt_plots[i],1);
-		if (i<7)
-		{
-			dphi_dlead_dtotal15->Add(dphi_lead_lowpt_plots[i],1);
-			dphi_dlead_dtotal25->Add(dphi_lead_plots[i],1);
-		}
-	}
-	dphi_dlead_dtotal15->Divide(dphi_total15);
-	dphi_dlead_dtotal25->Divide(dphi_total25);
 
+	//make the ratio plots 
+	std::vector<TH1F*> dphi_dlead_dtotal_plots;
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_dleading_dtotal_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_dtotal_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_dtotal_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_dtotal_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_dtotal_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_dtotal_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_plots.push_back(new TH1F("p_{Z}^{T}-25_leading_dtotal_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+
+	std::vector<TH1F*> dphi_dlead_dtotal_lowpt_plots;
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_2-3.3 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_3.3-5.4 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_5.4-8.9 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_8.9-14.6 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_14.6-24.0 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_24.0-39.5 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+	dphi_lead_lowpt_plots.push_back(new TH1F("15-p_{Z}^{T}-25_leading_dtotal_39.5-65 p_{T}","",40,-1*TMath::PiOver2(),3./2*TMath::Pi()));
+
+
+	TH1F *tempplot;
+	for (int i = 0; i < dphi_dlead_dtotal_lowpt_plots.size(); ++i)
+	{
+		dphi_dlead_dtotal_plots[i]->Sumw2();
+		dphi_dlead_dtotal_lowpt_plots[i]->Sumw2();
+
+		tempplot= (TH1F *)dphi_lead_lowpt_plots[i]->Clone();
+		tempplot->Add(dphi_lead_lowpt_plots[i+7],1);
+		dphi_dlead_dtotal_lowpt_plots[i]= (TH1F *)dphi_lead_lowpt_plots[i]->Clone();
+		dphi_dlead_dtotal_lowpt_plots[i]->Divide(tempplot);
+
+		tempplot= (TH1F *)dphi_lead_plots[i]->Clone();
+		tempplot->Add(dphi_lead_plots[i+7],1);
+		dphi_dlead_dtotal_plots[i]= (TH1F *)dphi_lead_plots[i]->Clone();
+		dphi_dlead_dtotal_plots[i]->Divide(tempplot);
+	}
+	
 	thisFile->Write();
 	//thisFile->Close();
 }
