@@ -16,6 +16,9 @@ void jetZHister(){
 	t->Add("../pythiadata/jet_mpi_inclusive2.root");
 	t->Add("../pythiadata/jet_mpi_inclusive3.root");
 	t->Add("../pythiadata/jet_mpi_inclusive4.root");
+	t->Add("../pythiadata/jet_mpi_inclusive5.root");
+	t->Add("../pythiadata/jet_mpi_inclusive6.root");
+	t->Add("../pythiadata/jet_mpi_inclusive7.root");
 	TFile *thisFile = new TFile("hists.root","UPDATE");
 
 	int code;
